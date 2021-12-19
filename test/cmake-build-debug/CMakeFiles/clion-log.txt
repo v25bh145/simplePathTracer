@@ -1,0 +1,16 @@
+"D:\CLion 2021.1.3\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=D:/Visual Studio/VC/Tools/MSVC/14.29.30133/bin/Hostx86/x86/nmake.exe" -G "CodeBlocks - NMake Makefiles" C:\Users\v25bh\Desktop\simplePathTracer\test
+-- Configuring done
+CMake Error at CMakeLists.txt:39 (add_executable):
+  Cannot find source file:
+
+    C:/Users/v25bh/Desktop/simplePathTracer/test/cmake-build-debug/src/application.cpp
+
+  Tried extensions .c .C .c++ .cc .cpp .cxx .cu .m .M .mm .h .hh .h++ .hm
+  .hpp .hxx .in .txx .f .F .for .f77 .f90 .f95 .f03 .ispc
+
+
+CMake Error at CMakeLists.txt:39 (add_executable):
+  No SOURCES given to target: inputXmlTest
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.

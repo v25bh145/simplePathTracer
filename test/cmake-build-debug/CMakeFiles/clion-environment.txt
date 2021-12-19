@@ -1,0 +1,4 @@
+ToolSet: 16.0 (local)@D:\Visual Studio
+Options: 
+
+Options:-DCMAKE_MAKE_PROGRAM=D:/Visual Studio/VC/Tools/MSVC/14.29.30133/bin/Hostx86/x86/nmake.exe
