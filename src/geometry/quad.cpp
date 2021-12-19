@@ -84,4 +84,13 @@ namespace pathTracer {
         return this->RTCInnerGeometryId;
     }
 
+    Vector3f Quad::getOutsideNormal()
+    {
+        if (vector3fEqualTo0(outsideNormal)) {
+            cout << "fatal: getOutsideNormal() by a simple geometry without setting outsideNormal" << endl;
+            assert(false);
+        }
+        return outsideNormal;
+    }
+
 }

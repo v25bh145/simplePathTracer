@@ -16,8 +16,6 @@ include_directories(
 
 set(
         SRCFILES
-        ${PROJECT_SOURCE_DIR}/src/application.cpp
-        ${PROJECT_SOURCE_DIR}/src/application.h
         ${PROJECT_SOURCE_DIR}/src/default.h
         ${PROJECT_SOURCE_DIR}/src/pngParser.cpp
         ${PROJECT_SOURCE_DIR}/src/pngParser.h
@@ -70,9 +68,5 @@ set (
         ${PNG_LIBRARY}
         ${EMBREE_LIBRARIES}
 )
-
-add_executable(${PROJECT_NAME} main.cpp ${SRCFILES})
-
-target_link_libraries(${PROJECT_NAME} ${EXT_LIBRARIES})
 
 add_subdirectory(test)

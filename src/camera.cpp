@@ -65,7 +65,12 @@ namespace pathTracer {
         //}
 
         Vector3f max_color = { 0.f, 0.f, 0.f };
+        int progressBar = 0;
         for(int x = 0; x < resolution.x(); ++x) {
+            if (x == progressBar * resolution.x() / 10) {
+                cout << progressBar * 10 << "%" << endl;
+                progressBar++;
+            }
             for(int y = 0; y < resolution.y(); ++y) {
                 Ray* ray = sample_wi(x, y);
                 Vector3f color = integrator->sample_li(scene, ray);
@@ -83,13 +88,14 @@ namespace pathTracer {
                 pixels[resolution.x() - x - 1][resolution.y() - y - 1] = color;
             }
         }
+        cout << "maxColor=" << vector3fToString(max_color) << endl;
         for (int x = 0; x < resolution.x(); ++x) {
             for (int y = 0; y < resolution.y(); ++y) {
-                pixels[x][y] = {
-                    pixels[x][y].x() * 255.f / max_color.x(),
-                    pixels[x][y].y() * 255.f / max_color.y(),
-                    pixels[x][y].z() * 255.f / max_color.z()
-                };
+                //pixels[x][y] = {
+                //    pixels[x][y].x() * 255.f / max_color.x(),
+                //    pixels[x][y].y() * 255.f / max_color.y(),
+                //    pixels[x][y].z() * 255.f / max_color.z()
+                //};
                 pixels[x][y] = {
                     pixels[x][y].x() > 255.f ? 255.f : pixels[x][y].x(),
                     pixels[x][y].y() > 255.f ? 255.f : pixels[x][y].y(),

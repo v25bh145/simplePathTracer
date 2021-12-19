@@ -12,6 +12,7 @@ namespace pathTracer {
     void orthogonal(Vector3f n, Vector3f &s, Vector3f &t);
     string vector3fToString(Vector3f v);
     Vector3f sameSide(Vector3f n, Vector3f w);
+    bool vector3fEqualTo0(Vector3f vector3f);
 }
 
 

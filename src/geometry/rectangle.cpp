@@ -39,6 +39,13 @@ namespace pathTracer {
         return quads[n]->getRTCInnerGeometryId();
     }
 
+    Vector3f Rectangle::getOutsideNormal()
+    {
+        cout << "fatal: getOutsideNormal() called by a compound geometry" << endl;
+        assert(false);
+        return Vector3f();
+    }
+
     //强制保存几何体的缓存
     void Rectangle::loadRealGeometryFlush() {
         for(auto quad : quads)

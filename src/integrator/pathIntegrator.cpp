@@ -10,8 +10,9 @@ namespace pathTracer {
 
         //auto* hitInteraction = new Interaction(origin_ray);
         //unsigned hitGeomID = scene->intersect(hitInteraction);
-        //Geometry* hitGeometry = scene->aggregation->findGeometryById(hitGeomID);
-        //if (hitGeomID != 4) return { 0, 0, 0 };
+        //Geometry* hitGeometry = hitInteraction->geometry;
+        //if (hitGeomID != 10) return { 0, 0, 0 };
+        //if (hitGeomID < 8 || hitGeomID > 11) return { 0, 0, 0 };
 
         Vector3f sum_L = { 0.f, 0.f, 0.f };
         for (int i = 0; i < sampleOnePixel; ++i) {
@@ -23,8 +24,8 @@ namespace pathTracer {
             while (true) {
                 auto* hitInteraction = new Interaction(ray);
                 unsigned hitGeomID = scene->intersect(hitInteraction);
-                Geometry* hitGeometry = scene->aggregation->findGeometryById(hitGeomID);
-                //cout << "   bounce=" << bounce << ", 当前交点=" << vector3fToString(hitInteraction->p) << ", id=" << hitGeomID << endl;
+                Geometry* hitGeometry = hitInteraction->geometry;
+                //cout << "   bounce=" << bounce << ", 当前交点=" << vector3fToString(hitInteraction->p) << ", id=" << hitGeomID << ", 入射方向=" << vector3fToString(hitInteraction->ray->direction) << endl;
 
                 // if this is the first ray OR the last ray sampled has a type SPECULAR
                 if (bounce == 0 || isSpecular) {
@@ -72,6 +73,12 @@ namespace pathTracer {
                 float wi_pdf;
                 int sampleType;
                 Vector3f mul = hitGeometry->bxdf->sample_f(hitInteraction, wi, wi_pdf, sampleType);
+                if (vector3fEqualTo0(mul)) {
+                    // end
+                    delete wi;
+                    delete hitInteraction;
+                    break;
+                }
                 //cout << "     f=" << vector3fToString(mul) << endl;
                 mul *= abs(hitInteraction->normal.dot(wi->direction));
                 //cout << "     cos=" << abs(hitInteraction->normal.dot(wi->direction)) << endl;
@@ -97,22 +104,15 @@ namespace pathTracer {
                 // if the depth > 3, then apply RR q = max(0.05, 1 - max{beta's specular})
                 // if pass Russian Roulette, then beta *= 1 / (1 - q), continue the endless while
                 if (bounce > 3) {
-                    ////cout << "进行俄罗斯轮盘赌判定" << endl;
                     float beta_max = max(max(beta.x(), beta.y()), beta.z());
-                    ////cout << "beta_max=" << beta_max << endl;
                     float q = max(0.05f, 1.f - beta_max);
-                    ////cout << "q=" << q << endl;
                     RandomGenerator randomGenerator;
                     float random_float = randomGenerator.uniform0To1();
-                    ////cout << "random=" << random_float << endl;
                     if (random_float > q) {
-                        ////cout << "通过判定，继续循环" << endl;
                         // continue
                         beta *= 1 / (1 - q);
-                        ////cout << "beta=" << beta << endl;
                     }
                     else {
-                        ////cout << "未通过判定，退出循环" << endl;
                         // end
                         delete wi;
                         delete hitInteraction;
@@ -123,7 +123,7 @@ namespace pathTracer {
                 // update the bounce
                 bounce++;
                 delete ray;
-                ray = new Ray(hitInteraction->p + hitInteraction->normal * 0.1, wi->direction, 0);
+                ray = new Ray(hitInteraction->p + wi->direction * 0.1, wi->direction, 0);
                 delete wi;
                 delete hitInteraction;
             }

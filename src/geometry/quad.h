@@ -14,8 +14,8 @@ namespace pathTracer {
         unsigned *indices;
     public:
         Quad(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f p4, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false) :p1(p1), p2(p2), p3(p3), p4(p4), outsideNormal(outsideNormal.normalized()), singleSide(singleSide), Geometry(bxdf, emitLight) {
-            if (bxdf->hasType(BxDFType::SPECULAR) && outsideNormal.x() == 0 && outsideNormal.y() == 0 && outsideNormal.z() == 0) {
-                cout << "must set the outsideNormal when having set SPECULAR bxdf" << endl;
+            if (bxdf->hasType(BxDFType::TRANSMISSION) && outsideNormal.x() == 0 && outsideNormal.y() == 0 && outsideNormal.z() == 0) {
+                cout << "must set the outsideNormal when having set TRANSMISSION bxdf" << endl;
                 assert(false);
             }
             RTCInnerGeometryId = ++Geometry::RTCInnerObjNumber;
@@ -47,6 +47,8 @@ namespace pathTracer {
         void attachAllGeometriesToScene(Scene scene) override;
 
         unsigned getRTCInnerGeometryId() override;
+
+        Vector3f getOutsideNormal() override;
     };
 }
 

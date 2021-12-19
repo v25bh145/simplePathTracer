@@ -15,17 +15,17 @@ namespace pathTracer{
 
     class BxDF;
     class Ray;
+    class Geometry;
 
     class Interaction {
     public:
         Interaction() {};
         Interaction(Ray *ray):ray(ray) {};
-//        Geometry *geometry;
+        Geometry *geometry;
         Ray *ray;
         Vector3f p;
         Vector3f normal;
         Vector3f normalShading;
-        //Vector3f outsideNormal;
         float u;
         float v;
         float dudp;

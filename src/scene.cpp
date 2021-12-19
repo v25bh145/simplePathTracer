@@ -41,6 +41,10 @@ namespace pathTracer {
                     rayHit.ray.org_y + rayHit.ray.dir_y * rayHit.ray.tfar,
                     rayHit.ray.org_z + rayHit.ray.dir_z * rayHit.ray.tfar,
             };
+            if (rayHit.hit.geomID > 0)
+                interaction->geometry = aggregation->findGeometryById(rayHit.hit.geomID);
+            else
+                interaction->geometry = nullptr;
 //            cout<<"Hit the geometry which id is: "<<rayHit.hit.geomID<<endl;
 //            cout<<"Hit information: "<<endl;
 //            cout<<"time="<<rayHit.ray.time<<endl;

@@ -27,7 +27,10 @@ namespace pathTracer {
         }
         Ray(Vector3f origin, Vector3f direction, float t, float tMin = 0, float tMax = numeric_limits<float>::infinity()):origin(origin),direction(direction.normalized()),t(t),tMin(tMin),tMax(tMax) {
             //cout << toString() << endl;
-            assert(tMin < tMax);
+            if (tMin > tMax) {
+                cout << "tMin > tMax while constructing Ray()" << endl;
+                assert(tMin < tMax);
+            }
         };
         Ray(Vector3f origin, Vector3f destination) {
             this->origin = origin;

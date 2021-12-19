@@ -10,7 +10,7 @@ namespace pathTracer {
 		Interaction* p = new Interaction(origin_ray);
 		unsigned hitId = scene->intersect(p);
 		if (hitId > 0) {
-			Geometry *hitGeometry = scene->aggregation->findGeometryById(hitId);
+			Geometry *hitGeometry = p->geometry;
 			Vector3f sum_L = { 0, 0, 0 };
 			for (int i = 0; i < sampleOnePixel; ++i) {
 				sum_L += estimateDirect(p, hitGeometry, scene);

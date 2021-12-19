@@ -12,9 +12,6 @@ namespace pathTracer {
 
         //Ray *wo = interaction->ray;
 
-        //assert(n.norm() == 1);
-        //assert(wo->direction.norm() == 1);
-
         RandomGenerator randomGenerator;
         float u = randomGenerator.uniform0To1(), v = randomGenerator.uniform0To1();
         //Vector3f wi_obj = {sqrt(u) * (float)cos(2 * PI * v), sqrt(u) * (float)sin(2 * PI * v), sqrt(1 - u)};

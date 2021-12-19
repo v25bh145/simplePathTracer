@@ -15,7 +15,8 @@ namespace pathTracer {
             t = { -n.x() * n.y(), n.z() * n.z() + n.x() * n.x(), -n.y() * n.z() };
         }
         else {
-            assert(true);
+            cout << "parameter n passed to orthogonal() is {0.f, 0.f, 0.f}" << endl;
+            assert(false);
         }
         s.normalize();
         t.normalize();
@@ -30,5 +31,9 @@ namespace pathTracer {
     Vector3f sameSide(Vector3f n, Vector3f w)
     {
         return n.dot(w) > 0 ? n : -n;
+    }
+    bool vector3fEqualTo0(Vector3f vector3f)
+    {
+        return (vector3f.x() == 0 && vector3f.y() == 0 && vector3f.z() == 0);
     }
 }

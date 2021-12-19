@@ -75,6 +75,8 @@ namespace pathTracer {
         float area() override;
 
         unsigned getRTCInnerGeometryId() override;
+
+        Vector3f getOutsideNormal() override;
     };
 }
 

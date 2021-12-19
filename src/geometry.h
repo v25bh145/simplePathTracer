@@ -55,6 +55,8 @@ namespace pathTracer {
         virtual void loadRealGeometryFlush() = 0;
 
         virtual unsigned getRTCInnerGeometryId() = 0;
+
+        virtual Vector3f getOutsideNormal() = 0;
     };
 
     Vector3f getMax(Vector3f p1, Vector3f p2);
