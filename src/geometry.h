@@ -11,7 +11,7 @@
 #include "ray.h"
 #include "bxdf.h"
 #include "sampling.h"
-#define FATHER_GEOMETRY_ID -5
+#include "media.h"
 
 namespace pathTracer {
 
@@ -19,6 +19,7 @@ namespace pathTracer {
     class Ray;
     class BxDF;
     class Scene;
+    class Media;
 
     class Geometry {
     //protect:
@@ -53,6 +54,8 @@ namespace pathTracer {
         virtual RTCGeometry* getRTCInnerGeometry() = 0;
 
         virtual Vector3f getOutsideNormal() = 0;
+        virtual Media* getOutsideMedia() = 0;
+        virtual Media* getInsideMedia() = 0;
 
         virtual void deepCopy(Geometry*& geometry) = 0;
     };

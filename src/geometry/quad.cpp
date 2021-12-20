@@ -110,9 +110,24 @@ namespace pathTracer {
         quad->outsideNormal = this->outsideNormal;
         quad->singleSide = this->singleSide;
         quad->bxdf = nullptr;
+        this->bxdf->deepCopy(quad->bxdf);
         quad->RTCInnerGeometry = this->RTCInnerGeometry;
         quad->RTCInnerGeometryId = this->RTCInnerGeometryId;
-        this->bxdf->deepCopy(quad->bxdf);
+        quad->insideMedia = quad->outsideMedia = nullptr;
+        if(insideMedia != nullptr)
+            this->insideMedia->deepCopy(insideMedia);
+        if (outsideMedia != nullptr)
+            this->outsideMedia->deepCopy(outsideMedia);
+    }
+
+    Media* Quad::getOutsideMedia()
+    {
+        return this->outsideMedia;
+    }
+
+    Media* Quad::getInsideMedia()
+    {
+        return this->insideMedia;
     }
 
     //void Quad::deepCopy(Quad* quad)

@@ -12,11 +12,18 @@ namespace pathTracer {
     public:
         // default will not create new RTCInnerGeometry
         Quad(){}
-        Quad(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f p4, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false) :p1(p1), p2(p2), p3(p3), p4(p4), outsideNormal(outsideNormal.normalized()), singleSide(singleSide), Geometry(bxdf, emitLight) {
-            if (bxdf->hasType(BxDFType::TRANSMISSION) && outsideNormal.x() == 0 && outsideNormal.y() == 0 && outsideNormal.z() == 0) {
-                cout << "must set the outsideNormal when having set TRANSMISSION bxdf" << endl;
-                assert(false);
+        Quad(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f p4, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false, Media* outsideMedia = nullptr, Media* insideMedia = nullptr) :p1(p1), p2(p2), p3(p3), p4(p4), outsideNormal(outsideNormal.normalized()), singleSide(singleSide), Geometry(bxdf, emitLight), outsideMedia(outsideMedia), insideMedia(insideMedia) {
+            if (vector3fEqualTo0(outsideNormal)) {
+                if (bxdf->hasType(BxDFType::TRANSMISSION)) {
+                    cout << "must set the outsideNormal when having set TRANSMISSION bxdf" << endl;
+                    assert(false);
+                }
+                if (insideMedia != nullptr || outsideMedia != nullptr) {
+                    cout << "must set the outsideNormal when having set media" << endl;
+                    assert(false);
+                }
             }
+
             RTCInnerGeometryId = ++Geometry::RTCInnerObjNumber;
             RTCInnerGeometry = new RTCGeometry[1];
             *RTCInnerGeometry = rtcNewGeometry(DEVICE, RTC_GEOMETRY_TYPE_QUAD);
@@ -38,6 +45,9 @@ namespace pathTracer {
         Vector3f outsideNormal;
         bool singleSide;
 
+        Media* outsideMedia;
+        Media* insideMedia;
+
         Geometry *hasSubGeometriesId(unsigned int id) override;
 
         Vector3f sample_point(float &pdf) override;
@@ -54,6 +64,9 @@ namespace pathTracer {
         Vector3f getOutsideNormal() override;
 
         void deepCopy(Geometry*& geometry) override;
+
+        Media* getOutsideMedia();
+        Media* getInsideMedia();
     };
 }
 

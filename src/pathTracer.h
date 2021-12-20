@@ -42,7 +42,9 @@
 #include "sampling.h"
 
 #include "mathHelper.h"
+
 #include "integrator/directIntegrator.h"
 
+#include "media.h"
 
 #endif
