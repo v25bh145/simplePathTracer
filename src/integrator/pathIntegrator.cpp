@@ -11,8 +11,17 @@ namespace pathTracer {
         //auto* hitInteraction = new Interaction(origin_ray);
         //unsigned hitGeomID = scene->intersect(hitInteraction);
         //Geometry* hitGeometry = hitInteraction->geometry;
-        //if (hitGeomID != 10) return { 0, 0, 0 };
-        //if (hitGeomID < 8 || hitGeomID > 11) return { 0, 0, 0 };
+        //if (hitGeomID != 16) return { 0, 0, 0 };
+        //else {
+        //    Ray* wi = new Ray();
+        //    float wi_pdf;
+        //    int sampleType;
+        //    Vector3f mul = hitGeometry->bxdf->sample_f(hitInteraction, wi, wi_pdf, sampleType);
+        //    Ray* ray2 = new Ray(hitInteraction->p + wi->direction * 0.1, wi->direction, 0);
+        //    auto* hitInteraction2 = new Interaction(ray2);
+        //    unsigned hitGeomID2 = scene->intersect(hitInteraction2);
+        //    if (hitGeomID2 != 12) return { 0, 0, 0 };
+        //}
 
         Vector3f sum_L = { 0.f, 0.f, 0.f };
         for (int i = 0; i < sampleOnePixel; ++i) {
@@ -70,10 +79,11 @@ namespace pathTracer {
                 // if this BSDF has a type SPECULAR, then set the isSpecular,
                 // multiply that BxDF into beta
                 Ray* wi = new Ray();
-                float wi_pdf;
+                float wi_pdf = 0.f;
                 int sampleType;
                 Vector3f mul = hitGeometry->bxdf->sample_f(hitInteraction, wi, wi_pdf, sampleType);
                 if (vector3fEqualTo0(mul)) {
+                    //cout << "退出" << endl;
                     // end
                     delete wi;
                     delete hitInteraction;
@@ -87,9 +97,9 @@ namespace pathTracer {
 
 
                 beta = {
-                        beta.x() * mul.x(),
-                        beta.y() * mul.y(),
-                        beta.z() * mul.z()
+                        beta.x() * mul.x() > 1 ? 1 : beta.x() * mul.x(),
+                        beta.y() * mul.y() > 1 ? 1 : beta.y() * mul.y(),
+                        beta.z() * mul.z() > 1 ? 1 : beta.z() * mul.z()
                 };
                 //cout << "   采样方向=" << vector3fToString(wi->direction) << "beta=" << vector3fToString(beta) << endl;
                 if ((sampleType & BxDFType::SPECULAR) != 0 && (isSpecular == true || bounce == 0)) {

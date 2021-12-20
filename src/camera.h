@@ -11,7 +11,6 @@
 #include "integrator.h"
 
 namespace pathTracer {
-
     class Ray;
     class Scene;
     class Integrator;

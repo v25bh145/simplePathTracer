@@ -14,12 +14,17 @@ namespace pathTracer {
         if (u > Fr) {
             // transmission
             bxdfValue = specularTransmission.sample_f(interaction, wi, pdf, sampleType);
-            pdf = 1 - Fr;
+            pdf *= 1 - Fr;
+            if (vector3fEqualTo0(bxdfValue)) {
+                // all reflection(wi_theta > PI / 2)
+                bxdfValue = specularReflection.sample_f(interaction, wi, pdf, sampleType);
+                pdf *= Fr;
+            }
         }
         else {
             // reflection
             bxdfValue = specularReflection.sample_f(interaction, wi, pdf, sampleType);
-            pdf = Fr;
+            pdf *= Fr;
         }
         return bxdfValue;
     }
@@ -34,6 +39,11 @@ namespace pathTracer {
             // transmission
             bxdfValue = specularTransmission.f(interaction, wi, pdf);
             pdf = 1 - Fr;
+            if (vector3fEqualTo0(bxdfValue)) {
+                // all reflection(wi_theta > PI / 2)
+                bxdfValue = specularReflection.f(interaction, wi, pdf);
+                pdf = 1;
+            }
         }
         else {
             // reflection

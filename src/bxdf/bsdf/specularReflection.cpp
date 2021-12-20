@@ -14,16 +14,16 @@ namespace pathTracer {
         // TODO:  1 OR cos(theta) / pi?
         //cout << "TEST: wi.dir=" << vector3fToString(wi->direction) << ", -wo.dir=" << vector3fToString(-wo->direction) << endl;
         //cout << "wi.dir-wo.dir=" << vector3fToString(wi->direction - wo->direction) << ", n=" << vector3fToString(n) << endl;
-        //pdf = abs(interaction->normal.dot(wi->direction));
-        pdf = 1;
+        pdf = abs(interaction->normal.dot(wi->direction));
+        //pdf = 1;
         sampleType = type;
         return ks;
     }
 
     Vector3f SpecularReflection::f(Interaction* interaction, Ray* wi, float& pdf)
     {
-        //pdf = abs(interaction->normal.dot(wi->direction));
-        pdf = 1;
+        pdf = abs(interaction->normal.dot(wi->direction));
+        //pdf = 1;
         return ks;
     }
 

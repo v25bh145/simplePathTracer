@@ -50,53 +50,53 @@ int main(int argc, char** argv) {
     /*
     * specular transmission
     */
-    //auto* short_block_1 = new Quad({ 130, 65, 165 }, { 82, 225, 165 }, { 240, 272, 165 }, { 290, 114, 165 }, specularTransmission, { 0, 0, 0 }, { 0, 0, 1 });
-    //Vector3f short_block2_vec1 = { 0, 0, 1 };
-    //Vector3f short_block2_vec2 = { 50, -158, 0 };
-    //Vector3f short_block2_vec3 = short_block2_vec1.cross(short_block2_vec2).normalized();
-    //auto* short_block_2 = new Quad({ 290, 114, 0 }, { 290, 114, 165 }, { 240, 272, 165 }, { 240, 272, 0 }, specularTransmission, { 0, 0, 0 }, sameSide(short_block2_vec3, { 0, 1, 0 }));
+    auto* short_block_1 = new Quad({ 130, 65, 165 }, { 82, 225, 165 }, { 240, 272, 165 }, { 290, 114, 165 }, fresnelSpecular, { 0, 0, 0 }, { 0, 0, 1 });
+    Vector3f short_block2_vec1 = { 0, 0, 1 };
+    Vector3f short_block2_vec2 = { 50, -158, 0 };
+    Vector3f short_block2_vec3 = short_block2_vec1.cross(short_block2_vec2).normalized();
+    auto* short_block_2 = new Quad({ 290, 114, 0 }, { 290, 114, 165 }, { 240, 272, 165 }, { 240, 272, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block2_vec3, { 0, 1, 0 }));
     //Vector3f short_block3_vec1 = { 0, 0, 1 };
     //Vector3f short_block3_vec2 = { 160, 49, 0 };
     //Vector3f short_block3_vec3 = short_block3_vec1.cross(short_block3_vec2).normalized();
-    //auto* short_block_3 = new Quad({ 130, 65, 0 }, { 130, 65, 165 }, { 290, 114, 165 }, { 290, 114, 0 }, specularTransmission, { 0, 0, 0 }, sameSide(short_block3_vec3, { 0, -1, 0 }));
+    //auto* short_block_3 = new Quad({ 130, 65, 0 }, { 130, 65, 165 }, { 290, 114, 165 }, { 290, 114, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block3_vec3, { 0, -1, 0 }));
     //Vector3f short_block4_vec1 = { 0, 0, 1 };
     //Vector3f short_block4_vec2 = { 48, -160, 0 };
     //Vector3f short_block4_vec3 = short_block4_vec1.cross(short_block4_vec2).normalized();
-    //auto* short_block_4 = new Quad({ 82, 225, 0 }, { 82, 225, 165 }, { 130, 65, 165 }, { 130, 65, 0 }, specularTransmission, { 0, 0, 0 }, sameSide(short_block4_vec3, { -1, 0, 0 }));
+    //auto* short_block_4 = new Quad({ 82, 225, 0 }, { 82, 225, 165 }, { 130, 65, 165 }, { 130, 65, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block4_vec3, { -1, 0, 0 }));
     //Vector3f short_block5_vec1 = { 0, 0, 1 };
     //Vector3f short_block5_vec2 = { 158, 47, 0 };
     //Vector3f short_block5_vec3 = short_block5_vec1.cross(short_block5_vec2).normalized();
-    //auto* short_block_5 = new Quad({ 240, 272, 0 }, { 240, 272, 165 }, { 82, 225, 165 }, { 82, 225, 0 }, specularTransmission, { 0, 0, 0 }, sameSide(short_block5_vec3, { 0, 1, 0 }));
+    //auto* short_block_5 = new Quad({ 240, 272, 0 }, { 240, 272, 165 }, { 82, 225, 165 }, { 82, 225, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block5_vec3, { 0, 1, 0 }));
 
-    auto* short_block_1 = new Quad({ 130, 65, 165 }, { 82, 225, 165 }, { 240, 272, 165 }, { 290, 114, 165 }, white_diffuse, { 0, 0, 0 });
-    auto* short_block_2 = new Quad({ 290, 114, 0 }, { 290, 114, 165 }, { 240, 272, 165 }, { 240, 272, 0 }, white_diffuse, { 0, 0, 0 });
+    //auto* short_block_1 = new Quad({ 130, 65, 165 }, { 82, 225, 165 }, { 240, 272, 165 }, { 290, 114, 165 }, white_diffuse, { 0, 0, 0 });
+    //auto* short_block_2 = new Quad({ 290, 114, 0 }, { 290, 114, 165 }, { 240, 272, 165 }, { 240, 272, 0 }, white_diffuse, { 0, 0, 0 });
     auto* short_block_3 = new Quad({ 130, 65, 0 }, { 130, 65, 165 }, { 290, 114, 165 }, { 290, 114, 0 }, white_diffuse, { 0, 0, 0 });
     auto* short_block_4 = new Quad({ 82, 225, 0 }, { 82, 225, 165 }, { 130, 65, 165 }, { 130, 65, 0 }, white_diffuse, { 0, 0, 0 });
     auto* short_block_5 = new Quad({ 240, 272, 0 }, { 240, 272, 165 }, { 82, 225, 165 }, { 82, 225, 0 }, white_diffuse, { 0, 0, 0 });
 
-    auto* tall_block_1 = new Quad({ 423, 247, 330 }, { 265, 296, 330 }, { 314, 456, 330 }, { 472, 406, 330 }, specularReflection, { 0, 0, 0 }, {0, 0, 1});
-    Vector3f tall_block2_vec1 = { 0, 0, 1 };
-    Vector3f tall_block2_vec2 = { 49, 159, 0 };
-    Vector3f tall_block2_vec3 = sameSide(tall_block2_vec1.cross(tall_block2_vec2).normalized(), { 1, 0, 0 });
-    auto* tall_block_2 = new Quad({ 423, 247, 0 }, { 423, 247, 330 }, { 472, 406, 330 }, { 472, 406, 0 }, specularReflection, { 0, 0, 0 }, tall_block2_vec3);
-    Vector3f tall_block3_vec1 = { 0, 0, 1 };
-    Vector3f tall_block3_vec2 = { -158, 50, 0 };
-    Vector3f tall_block3_vec3 = sameSide(tall_block3_vec1.cross(tall_block3_vec2).normalized(), { 0, 1, 0 });
-    auto* tall_block_3 = new Quad({ 472, 406, 0 }, { 472, 406, 330 }, { 314, 456, 330 }, { 314, 456, 0 }, specularReflection, { 0, 0, 0 }, tall_block3_vec3);
-    Vector3f tall_block4_vec1 = { 0, 0, 1 };
-    Vector3f tall_block4_vec2 = { 49, 160, 0 };
-    Vector3f tall_block4_vec3 = sameSide(tall_block4_vec1.cross(tall_block4_vec2).normalized(), { -1, 0, 0 });
-    auto* tall_block_4 = new Quad({ 314, 456, 0 }, { 314, 456, 330 }, { 265, 296, 330 }, { 265, 296, 0 }, specularReflection, { 0, 0, 0 }, tall_block4_vec3);
+    //auto* tall_block_1 = new Quad({ 423, 247, 330 }, { 265, 296, 330 }, { 314, 456, 330 }, { 472, 406, 330 }, fresnelSpecular, { 0, 0, 0 }, {0, 0, 1});
+    //Vector3f tall_block2_vec1 = { 0, 0, 1 };
+    //Vector3f tall_block2_vec2 = { 49, 159, 0 };
+    //Vector3f tall_block2_vec3 = sameSide(tall_block2_vec1.cross(tall_block2_vec2).normalized(), { 1, 0, 0 });
+    //auto* tall_block_2 = new Quad({ 423, 247, 0 }, { 423, 247, 330 }, { 472, 406, 330 }, { 472, 406, 0 }, fresnelSpecular, { 0, 0, 0 }, tall_block2_vec3);
+    //Vector3f tall_block3_vec1 = { 0, 0, 1 };
+    //Vector3f tall_block3_vec2 = { -158, 50, 0 };
+    //Vector3f tall_block3_vec3 = sameSide(tall_block3_vec1.cross(tall_block3_vec2).normalized(), { 0, 1, 0 });
+    //auto* tall_block_3 = new Quad({ 472, 406, 0 }, { 472, 406, 330 }, { 314, 456, 330 }, { 314, 456, 0 }, fresnelSpecular, { 0, 0, 0 }, tall_block3_vec3);
+    //Vector3f tall_block4_vec1 = { 0, 0, 1 };
+    //Vector3f tall_block4_vec2 = { 49, 160, 0 };
+    //Vector3f tall_block4_vec3 = sameSide(tall_block4_vec1.cross(tall_block4_vec2).normalized(), { -1, 0, 0 });
+    //auto* tall_block_4 = new Quad({ 314, 456, 0 }, { 314, 456, 330 }, { 265, 296, 330 }, { 265, 296, 0 }, fresnelSpecular, { 0, 0, 0 }, tall_block4_vec3);
     Vector3f tall_block5_vec1 = { 0, 0, 1 };
     Vector3f tall_block5_vec2 = { -158, 49, 0 };
     Vector3f tall_block5_vec3 = sameSide(tall_block5_vec1.cross(tall_block5_vec2).normalized(), { -1, 0, 0 });
     auto* tall_block_5 = new Quad({ 265, 296, 0 }, { 265, 296, 330 }, { 423, 247, 330 }, { 423, 247, 0 }, specularReflection, { 0, 0, 0 }, tall_block5_vec3);
 
-    //auto* tall_block_1 = new Quad({ 423, 247, 330 }, { 265, 296, 330 }, { 314, 456, 330 }, { 472, 406, 330 }, fresnelSpecular, { 0, 0, 0 });
-    //auto* tall_block_2 = new Quad({ 423, 247, 0 }, { 423, 247, 330 }, { 472, 406, 330 }, { 472, 406, 0 }, fresnelSpecular, { 0, 0, 0 });
-    //auto* tall_block_3 = new Quad({ 472, 406, 0 }, { 472, 406, 330 }, { 314, 456, 330 }, { 314, 456, 0 }, fresnelSpecular, { 0, 0, 0 });
-    //auto* tall_block_4 = new Quad({ 314, 456, 0 }, { 314, 456, 330 }, { 265, 296, 330 }, { 265, 296, 0 }, fresnelSpecular, { 0, 0, 0 });
-    //auto* tall_block_5 = new Quad({ 265, 296, 0 }, { 265, 296, 330 }, { 423, 247, 330 }, { 423, 247, 0 }, fresnelSpecular, { 0, 0, 0 });
+    auto* tall_block_1 = new Quad({ 423, 247, 330 }, { 265, 296, 330 }, { 314, 456, 330 }, { 472, 406, 330 }, white_diffuse, { 0, 0, 0 });
+    auto* tall_block_2 = new Quad({ 423, 247, 0 }, { 423, 247, 330 }, { 472, 406, 330 }, { 472, 406, 0 }, white_diffuse, { 0, 0, 0 });
+    auto* tall_block_3 = new Quad({ 472, 406, 0 }, { 472, 406, 330 }, { 314, 456, 330 }, { 314, 456, 0 }, white_diffuse, { 0, 0, 0 });
+    auto* tall_block_4 = new Quad({ 314, 456, 0 }, { 314, 456, 330 }, { 265, 296, 330 }, { 265, 296, 0 }, white_diffuse, { 0, 0, 0 });
+    //auto* tall_block_5 = new Quad({ 265, 296, 0 }, { 265, 296, 330 }, { 423, 247, 330 }, { 423, 247, 0 }, white_diffuse, { 0, 0, 0 });
 
     auto* aggregation = new Aggregation();
     auto* scene = new Scene(aggregation);
@@ -122,7 +122,7 @@ int main(int argc, char** argv) {
 
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
 
-    PathIntegrator* integrator = new PathIntegrator(5, 10);
+    PathIntegrator* integrator = new PathIntegrator(10, 10);
 
     Vector3f cameraOrigin = { 278, -800, 273 };
     Vector3f cameraLookingAt = { 0, 1, 0 };

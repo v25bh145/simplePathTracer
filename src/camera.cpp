@@ -3,6 +3,7 @@
 //
 
 #include "camera.h"
+#define THREAD_N 16
 
 namespace pathTracer {
     DWORD WINAPI generateByThread(LPVOID lpParameter) {
@@ -29,7 +30,7 @@ namespace pathTracer {
         /*
         * multi-thread
         */
-        ImageFragment* imageFragment[THREAD_N];
+        ImageFragment** imageFragment = new ImageFragment*[THREAD_N];
         for (int i = 0; i < THREAD_N; ++i) {
             imageFragment[i] = new ImageFragment(
                 { resolution.x() * i / THREAD_N , resolution.x() * (i + 1) / THREAD_N },
