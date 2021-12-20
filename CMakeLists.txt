@@ -58,8 +58,10 @@ set(
         ${PROJECT_SOURCE_DIR}/src/integrator/directIntegrator.h
         ${PROJECT_SOURCE_DIR}/src/integrator/directIntegrator.cpp
         ${PROJECT_SOURCE_DIR}/src/pathTracer.h
-        ${PROJECT_SOURCE_DIR}/src/media.cpp
-        ${PROJECT_SOURCE_DIR}/src/media.h
+        ${PROJECT_SOURCE_DIR}/src/medium.cpp
+        ${PROJECT_SOURCE_DIR}/src/medium.h
+        ${PROJECT_SOURCE_DIR}/src/integrator/volumePathIntegrator.h
+        ${PROJECT_SOURCE_DIR}/src/integrator/volumePathIntegrator.cpp
 )
 
 set (

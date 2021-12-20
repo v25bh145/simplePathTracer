@@ -12,14 +12,14 @@ namespace pathTracer {
     public:
         // default will not create new RTCInnerGeometry
         Quad(){}
-        Quad(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f p4, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false, Media* outsideMedia = nullptr, Media* insideMedia = nullptr) :p1(p1), p2(p2), p3(p3), p4(p4), outsideNormal(outsideNormal.normalized()), singleSide(singleSide), Geometry(bxdf, emitLight), outsideMedia(outsideMedia), insideMedia(insideMedia) {
+        Quad(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f p4, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false, Medium* outsideMedium = nullptr, Medium* insideMedium = nullptr) :p1(p1), p2(p2), p3(p3), p4(p4), outsideNormal(outsideNormal.normalized()), singleSide(singleSide), Geometry(bxdf, emitLight), outsideMedium(outsideMedium), insideMedium(insideMedium) {
             if (vector3fEqualTo0(outsideNormal)) {
                 if (bxdf->hasType(BxDFType::TRANSMISSION)) {
                     cout << "must set the outsideNormal when having set TRANSMISSION bxdf" << endl;
                     assert(false);
                 }
-                if (insideMedia != nullptr || outsideMedia != nullptr) {
-                    cout << "must set the outsideNormal when having set media" << endl;
+                if (insideMedium != nullptr || outsideMedium != nullptr) {
+                    cout << "must set the outsideNormal when having set medium" << endl;
                     assert(false);
                 }
             }
@@ -45,8 +45,8 @@ namespace pathTracer {
         Vector3f outsideNormal;
         bool singleSide;
 
-        Media* outsideMedia;
-        Media* insideMedia;
+        Medium* outsideMedium;
+        Medium* insideMedium;
 
         Geometry *hasSubGeometriesId(unsigned int id) override;
 
@@ -65,8 +65,8 @@ namespace pathTracer {
 
         void deepCopy(Geometry*& geometry) override;
 
-        Media* getOutsideMedia();
-        Media* getInsideMedia();
+        Medium* getOutsideMedium();
+        Medium* getInsideMedium();
     };
 }
 

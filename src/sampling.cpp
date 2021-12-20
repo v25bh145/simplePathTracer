@@ -10,7 +10,7 @@ namespace pathTracer {
         dis = uniform_int_distribution<int>(0, DEFAULT_ACCURACY);
         return (float)dis(gen) / DEFAULT_ACCURACY;
     }
-
+    // [n, m]
     int RandomGenerator::uniformNToM(int n, int m) {
         if(n > m)   swap(n, m);
         dis = uniform_int_distribution<int>(n, m);

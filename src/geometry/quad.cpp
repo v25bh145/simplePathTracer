@@ -91,10 +91,10 @@ namespace pathTracer {
 
     Vector3f Quad::getOutsideNormal()
     {
-        if (vector3fEqualTo0(outsideNormal)) {
-            cout << "fatal: getOutsideNormal() by a simple geometry without setting outsideNormal" << endl;
-            assert(false);
-        }
+        //if (vector3fEqualTo0(outsideNormal)) {
+        //    cout << "fatal: getOutsideNormal() by a simple geometry without setting outsideNormal" << endl;
+        //    assert(false);
+        //}
         return outsideNormal;
     }
 
@@ -113,21 +113,21 @@ namespace pathTracer {
         this->bxdf->deepCopy(quad->bxdf);
         quad->RTCInnerGeometry = this->RTCInnerGeometry;
         quad->RTCInnerGeometryId = this->RTCInnerGeometryId;
-        quad->insideMedia = quad->outsideMedia = nullptr;
-        if(insideMedia != nullptr)
-            this->insideMedia->deepCopy(insideMedia);
-        if (outsideMedia != nullptr)
-            this->outsideMedia->deepCopy(outsideMedia);
+        quad->insideMedium = quad->outsideMedium = nullptr;
+        if(insideMedium != nullptr)
+            this->insideMedium->deepCopy(insideMedium);
+        if (outsideMedium != nullptr)
+            this->outsideMedium->deepCopy(outsideMedium);
     }
 
-    Media* Quad::getOutsideMedia()
+    Medium* Quad::getOutsideMedium()
     {
-        return this->outsideMedia;
+        return this->outsideMedium;
     }
 
-    Media* Quad::getInsideMedia()
+    Medium* Quad::getInsideMedium()
     {
-        return this->insideMedia;
+        return this->insideMedium;
     }
 
     //void Quad::deepCopy(Quad* quad)

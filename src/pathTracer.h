@@ -27,8 +27,6 @@
 
 #include "bxdf/bsdf/fresnelSpecular.h"
 
-#include "geometry/rectangle.h"
-
 #include "camera.h"
 
 #include "interaction.h"
@@ -45,6 +43,8 @@
 
 #include "integrator/directIntegrator.h"
 
-#include "media.h"
+#include "medium.h"
+
+#include "integrator/volumePathIntegrator.h"
 
 #endif

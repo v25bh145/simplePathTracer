@@ -26,6 +26,7 @@ namespace pathTracer{
         Vector3f p;
         Vector3f normal;
         Vector3f normalShading;
+        float time;
         float u;
         float v;
         float dudp;

@@ -3,20 +3,7 @@
 //
 
 // test the shadow ray [simulate with no obj parser]
-#include "../../src/scene.h"
-#include "../../src/bxdf/bsdf/lambertianReflection.h"
-#include "../../src/bxdf/bsdf/fresnelSpecular.h"
-#include "../../src/bxdf/bsdf/specularTransmission.h"
-#include "../../src/bxdf/bsdf/specularReflection.h"
-#include "../../src/interaction.h"
-
-#include "../../src/integrator/pathIntegrator.h"
-
-//#include "../../src/integrator/directIntegrator.h"
-
-#include "../../src/geometry/quad.h"
-#include "../../src/camera.h"
-#include "../../src/pngParser.h"
+#include "../../src/pathTracer.h"
 
 using namespace std;
 using namespace pathTracer;
@@ -122,7 +109,7 @@ int main(int argc, char** argv) {
 
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
 
-    PathIntegrator* integrator = new PathIntegrator(10, 10);
+    VolumePathIntegrator* integrator = new VolumePathIntegrator(10, 10);
 
     Vector3f cameraOrigin = { 278, -800, 273 };
     Vector3f cameraLookingAt = { 0, 1, 0 };

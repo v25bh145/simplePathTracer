@@ -11,9 +11,6 @@ namespace pathTracer {
         orthogonal(n, s, t);
 
         Vector3f wo_world = interaction->ray->direction;
-        if (pdf == -1) {
-            cout << "wo_world=" << vector3fToString(wo_world) << endl;
-        }
 
         Matrix3f trans_obj_world, trans_world_obj;
         trans_obj_world <<
@@ -23,9 +20,6 @@ namespace pathTracer {
         trans_world_obj = trans_obj_world.inverse();
         // the same hemisphere plane as wi's
         Vector3f wo_obj = trans_world_obj * wo_world;
-        if (pdf == -1) {
-            cout << "wo_obj=" << vector3fToString(wo_obj) << endl;
-        }
         float k = wo_obj.y() / wo_obj.x();
 
         float wo_costheta = wo_obj.z();
@@ -34,20 +28,9 @@ namespace pathTracer {
         float wi_sintheta;
         // -n: negative(negative(normal))=positive
         if (interaction->geometry->getOutsideNormal().dot(-n) > 0) { 
-            if (pdf == -1) {
-                cout << "外侧射入" << endl;
-            }
             wi_sintheta = wo_sintheta * outsideEta / insideEta;
         } else { 
-            if (pdf == -1) {
-                cout << "内侧射出" << endl;
-            }
             wi_sintheta = wo_sintheta * insideEta / outsideEta;
-        }
-        if (pdf == -1) {
-            cout << "wo_theta" << wo_theta << endl;
-            cout << "wo_sintheta" << wo_sintheta << endl;
-            cout << "wi_sintheta" << wi_sintheta << endl;
         }
         if (wi_sintheta >= 1.f){
             //pdf = 1;
@@ -67,10 +50,6 @@ namespace pathTracer {
         Vector3f wi_obj = { wo_obj.x(), wo_obj.y(), wi_costheta };
         wi_obj.normalize();
         Vector3f wi_world = trans_obj_world * wi_obj;
-        if (pdf == -1) {
-            cout << "wi_obj=" << vector3fToString(wi_obj) << endl;
-            cout << "wi_world=" << vector3fToString(wi_world) << endl;
-        }
         wi_world.normalize();
 
         *wi = Ray(interaction->p, wi_world, 0);

@@ -43,7 +43,7 @@ namespace pathTracer {
             interaction->normalShading.normalize();
 
             interaction->u = rayHit.hit.u; interaction->v = rayHit.hit.v;
-
+            interaction->time = rayHit.ray.tfar;
             interaction->p = {
                     rayHit.ray.org_x + rayHit.ray.dir_x * rayHit.ray.tfar,
                     rayHit.ray.org_y + rayHit.ray.dir_y * rayHit.ray.tfar,
