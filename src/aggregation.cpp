@@ -5,8 +5,6 @@
 #include "aggregation.h"
 
 namespace pathTracer {
-    Aggregation::Aggregation() {
-    }
 
     void Aggregation::push_back(Geometry *geometry) {
         geometries.push_back(geometry);
@@ -26,6 +24,15 @@ namespace pathTracer {
     void Aggregation::attachAllGeometriesToScene(Scene *scene) {
         for(auto geometry : geometries) {
             geometry->attachAllGeometriesToScene(*scene);
+        }
+    }
+    void Aggregation::deepCopy(Aggregation*& aggregation)
+    {
+        aggregation = new Aggregation();
+        for (auto geometry : this->geometries) {
+            Geometry* newGeometry = nullptr;
+            geometry->deepCopy(newGeometry);
+            aggregation->push_back(newGeometry);
         }
     }
 }

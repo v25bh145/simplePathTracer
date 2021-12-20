@@ -42,7 +42,7 @@ namespace pathTracer {
         //Geometry(BxDF* bxdf, Vector3f emitLight = {0, 0, 0}):bxdf(bxdf), emitLight(emitLight) {}
         Geometry(BxDF* bxdf, Vector3f emitLight = { 0, 0, 0 }, RTCGeometry* RTCInnerGeometry = nullptr, unsigned RTCInnerGeometryId = FATHER_GEOMETRY_ID)
             :bxdf(bxdf), emitLight(emitLight), RTCInnerGeometry(RTCInnerGeometry), RTCInnerGeometryId(RTCInnerGeometryId){}
-        Geometry();
+        Geometry() {};
 
         virtual Vector3f sample_point(float& pdf) = 0;
         virtual Vector3f le(Interaction *p, float &pdf) = 0;
@@ -57,6 +57,8 @@ namespace pathTracer {
         virtual unsigned getRTCInnerGeometryId() = 0;
 
         virtual Vector3f getOutsideNormal() = 0;
+
+        virtual void deepCopy(Geometry*& geometry) = 0;
     };
 
     Vector3f getMax(Vector3f p1, Vector3f p2);

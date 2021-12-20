@@ -6,6 +6,9 @@
 
 namespace pathTracer {
     Vector3f SpecularTransmission::sample_f(Interaction *interaction, Ray *wi, float &pdf, int &sampleType) {
+        pdf = 1;
+        sampleType = type;
+
         Vector3f n = -interaction->normal;
         Vector3f s, t;
         orthogonal(n, s, t);
@@ -31,16 +34,12 @@ namespace pathTracer {
         // -n: negative(negative(normal))=positive
         if (interaction->geometry->getOutsideNormal().dot(-n) > 0) { 
             //cout << "外侧射入" << endl;
-            wi_sintheta = wo_sintheta * eta;
+            wi_sintheta = wo_sintheta * (outsideEta / insideEta);
         } else { 
             //cout << "内侧射出" << endl;
-            wi_sintheta = wo_sintheta / eta; 
+            wi_sintheta = wo_sintheta / (outsideEta / insideEta);
         }
-        if (wi_sintheta >= 1.f) {
-            pdf = abs(interaction->normal.dot(wi->direction));
-            sampleType = type;
-            return {0, 0, 0};
-        }
+        if (wi_sintheta >= 1.f) return {0, 0, 0};
         float wi_theta = asin(wi_sintheta);
         float wi_costheta = cos(wi_theta);
         //cout << "wo_theta" << wo_theta << endl;
@@ -60,14 +59,15 @@ namespace pathTracer {
         wi_world.normalize();
 
         *wi = Ray(interaction->p, wi_world, 0);
-
-        pdf = abs(interaction->normal.dot(wi->direction));
-        sampleType = type;
         return ks;
     }
     Vector3f SpecularTransmission::f(Interaction* interaction, Ray* wi, float& pdf)
     {
-        pdf = abs(interaction->normal.dot(wi->direction));;
+        pdf = 1;
         return ks;
+    }
+    void SpecularTransmission::deepCopy(BxDF*& bxdf)
+    {
+        bxdf = new SpecularTransmission(this->ks, this->outsideEta, this->insideEta);
     }
 }

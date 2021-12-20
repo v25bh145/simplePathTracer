@@ -21,16 +21,18 @@ namespace pathTracer {
         vector<Geometry*> geometries = vector<Geometry*>(0);
         // 几何体其中的灯光
         vector<Geometry*> lights;
-        Aggregation();
         void push_back(Geometry* geometry);
         Geometry *findGeometryById(unsigned id);
         void attachAllGeometriesToScene(Scene *scene);
+
+        Aggregation() {}
 
         Geometry *uniformRandomLight() {
             RandomGenerator randomGenerator;
             int num = randomGenerator.uniformNToM(0, lights.size() - 1);
             return lights[num];
         }
+        void deepCopy(Aggregation*& aggregation);
     };
 }
 

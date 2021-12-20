@@ -6,9 +6,9 @@
 #define SIMPLEPATHTRACER_SCENE_H
 
 #include "default.h"
+#include "aggregation.h"
 #include "ray.h"
 #include "interaction.h"
-#include "aggregation.h"
 
 namespace pathTracer {
     class Ray;
@@ -17,6 +17,7 @@ namespace pathTracer {
 
     class Scene {
     public:
+        Scene(){}
         Scene(Aggregation *aggregation):aggregation(aggregation)  {
             RTCInnerScene = new RTCScene[1];
             *RTCInnerScene = rtcNewScene(DEVICE);
@@ -25,6 +26,8 @@ namespace pathTracer {
         Aggregation* aggregation;
         unsigned intersect(Interaction *interaction); //return the Geometry ID & update the interaction's info
         void commit();
+
+        void deepCopy(Scene*& scene);
     };
 }
 

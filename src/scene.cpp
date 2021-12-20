@@ -10,6 +10,14 @@ namespace pathTracer {
         rtcCommitScene(*RTCInnerScene);
     }
 
+    void Scene::deepCopy(Scene*& scene)
+    {
+        scene = new Scene();
+        scene->aggregation = nullptr;
+        scene->RTCInnerScene = this->RTCInnerScene;
+        this->aggregation->deepCopy(scene->aggregation);
+    }
+
     unsigned Scene::intersect(Interaction *interaction) {
         RTCRayHit rayHit;
         rayHit.ray = interaction->ray->getRTCInnerRay();

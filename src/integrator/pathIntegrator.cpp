@@ -134,4 +134,15 @@ namespace pathTracer {
         //cout << "sum_L" << vector3fToString(sum_L) << endl;
         return sum_L / sampleOnePixel;
     }
+    void PathIntegrator::deepCopy(Integrator*& integrator)
+    {
+        integrator = new PathIntegrator(this->maxDepth, this->sampleOnePixel);
+    }
+    string PathIntegrator::toString()
+    {
+        string info = "";
+        ostringstream buffer(info);
+        buffer << "pathIntegrator: (maxDepth, sampleOnePixel)=(" << maxDepth << ", " << sampleOnePixel << ")" << endl;
+        return buffer.str();
+    }
 }

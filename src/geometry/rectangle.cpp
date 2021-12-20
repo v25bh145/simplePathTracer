@@ -46,6 +46,23 @@ namespace pathTracer {
         return Vector3f();
     }
 
+    void Rectangle::deepCopy(Geometry*& geometry)
+    {
+        geometry = new Rectangle();
+        Rectangle* rectangle = (Rectangle*)geometry;
+        rectangle->pMax = this->pMax;
+        rectangle->pMin = this->pMin;
+        rectangle->emitLight = this->emitLight;
+        for (auto quad : this->quads) {
+            Geometry* newQuad = nullptr;
+            quad->deepCopy(newQuad);
+            rectangle->quads.push_back((Quad*)newQuad);
+        }
+        rectangle->bxdf = nullptr;
+        this->bxdf->deepCopy(rectangle->bxdf);
+        // won't copy the RTCInnerGeometry & RTCInnerGeometryId
+    }
+
     //强制保存几何体的缓存
     void Rectangle::loadRealGeometryFlush() {
         for(auto quad : quads)

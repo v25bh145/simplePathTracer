@@ -5,97 +5,79 @@
 #include "camera.h"
 
 namespace pathTracer {
-    //DWORD WINAPI generateByThread(LPVOID lpParameter) {
-    //    ImageFragment* imageFragment = (ImageFragment*) lpParameter;
-    //    Camera* camera = imageFragment->camera;
-    //    int xLow = imageFragment->widthRange.first,
-    //        xHigh = imageFragment->widthRange.second,
-    //        yLow = imageFragment->heightRange.first,
-    //        yHigh = imageFragment->heightRange.second;
-    //    for (int x = xLow; x < xHigh; ++x) {
-    //        for (int y = yLow; y < yHigh; ++y) {
-    //            Ray* ray = camera->sample_wi(x, y);
-    //            imageFragment->pixels[x][y] = camera->integrator->sample_li(camera->scene, ray);
-    //            delete ray;
-    //        }
-    //    }
-    //    return 0;
-    //}
+    DWORD WINAPI generateByThread(LPVOID lpParameter) {
+        ImageFragment* imageFragment = (ImageFragment*) lpParameter;
+        Camera* camera = imageFragment->camera;
+        int xLow = imageFragment->widthRange.first,
+            xHigh = imageFragment->widthRange.second,
+            yLow = imageFragment->heightRange.first,
+            yHigh = imageFragment->heightRange.second;
+        for (int x = xLow; x < xHigh; ++x) {
+            for (int y = yLow; y < yHigh; ++y) {
+                Ray* ray = camera->sample_wi(x, y);
+                Vector3f pixel = camera->integrator->sample_li(camera->scene, ray);
+                imageFragment->pixels[x - xLow][y - yLow] = pixel;
+                delete ray;
+            }
+        }
+        return 0;
+    }
     // use integrator compute the pixels
     // x: width
     // y: height
     void Camera::generate() {
-        //ImageFragment* imageFragment = new ImageFragment[20];
-        //for (int i = 0; i < THREAD_N; ++i) {
-        //    imageFragment[i] = ImageFragment(
-        //        { resolution.x() * i / THREAD_N , resolution.x() * (i + 1) / THREAD_N },
-        //        { 0, resolution.y() },
-        //        this
-        //    );
-        //}
-
-        //HANDLE* handle = new HANDLE[THREAD_N];
-        //for (int i = 0; i < THREAD_N; ++i)
-        //    // [ first(), second() )
-        //    handle[i] = CreateThread(NULL, 0, &generateByThread, imageFragment + i, 0, NULL);
-        //for (int i = 0; i < THREAD_N; ++i)
-        //    WaitForSingleObject(handle[i], INFINITE);
-
-        //Vector3f max_color = { 0.f, 0.f, 0.f };
-        //for (int i = 0; i < THREAD_N; ++i) {
-        //    int xLow = imageFragment[i].widthRange.first,
-        //        xHigh = imageFragment[i].widthRange.second,
-        //        yLow = imageFragment[i].heightRange.first,
-        //        yHigh = imageFragment[i].heightRange.second;
-        //    for (int x = xLow; x < xHigh; ++x) {
-        //        for (int y = yLow; y < yHigh; ++y) {
-        //            Vector3f color = imageFragment[i].pixels[x][y];
-        //            if (color.x() < 20.f) {
-        //                max_color(0) = max_color.x() > color.x() ? max_color.x() : color.x();
-        //            }
-        //            if (color.y() < 20.f) {
-        //                max_color(1) = max_color.y() > color.y() ? max_color.y() : color.y();
-        //            }
-        //            if (color.z() < 20.f) {
-        //                max_color(2) = max_color.z() > color.z() ? max_color.z() : color.z();
-        //            }
-        //            pixels[resolution.x() - x - 1][resolution.y() - y - 1] = color;
-        //        }
+        /*
+        * multi-thread
+        */
+        ImageFragment* imageFragment[THREAD_N];
+        for (int i = 0; i < THREAD_N; ++i) {
+            imageFragment[i] = new ImageFragment(
+                { resolution.x() * i / THREAD_N , resolution.x() * (i + 1) / THREAD_N },
+                { 0, resolution.y() },
+                this
+            );
+        }
+        HANDLE* handle = new HANDLE[THREAD_N];
+        for (int i = 0; i < THREAD_N; ++i)
+            // [ first(), second() )
+            handle[i] = CreateThread(NULL, 0, &generateByThread, imageFragment[i], 0, NULL);
+        for (int i = 0; i < THREAD_N; ++i)
+            WaitForSingleObject(handle[i], INFINITE);
+        for (int i = 0; i < THREAD_N; ++i) {
+            int xLow = imageFragment[i]->widthRange.first,
+                xHigh = imageFragment[i]->widthRange.second,
+                yLow = imageFragment[i]->heightRange.first,
+                yHigh = imageFragment[i]->heightRange.second;
+            for (int x = xLow; x < xHigh; ++x) {
+                for (int y = yLow; y < yHigh; ++y) {
+                    Vector3f color = imageFragment[i]->pixels[x - xLow][y - yLow];
+                    pixels[resolution.x() - x - 1][resolution.y() - y - 1] = color;
+                }
+            }
+        }
+        /*
+        * one-thread
+        */
+        //int progressBar = 0;
+        //for(int x = 0; x < resolution.x(); ++x) {
+        //    if (x == progressBar * resolution.x() / 10) {
+        //        cout << progressBar * 10 << "%" << endl;
+        //        progressBar++;
+        //    }
+        //    for(int y = 0; y < resolution.y(); ++y) {
+        //        Ray* ray = sample_wi(x, y);
+        //        Vector3f color = integrator->sample_li(scene, ray);
+        //        delete ray;
+        //        // reverse
+        //        pixels[resolution.x() - x - 1][resolution.y() - y - 1] = color;
         //    }
         //}
 
-        Vector3f max_color = { 0.f, 0.f, 0.f };
-        int progressBar = 0;
-        for(int x = 0; x < resolution.x(); ++x) {
-            if (x == progressBar * resolution.x() / 10) {
-                cout << progressBar * 10 << "%" << endl;
-                progressBar++;
-            }
-            for(int y = 0; y < resolution.y(); ++y) {
-                Ray* ray = sample_wi(x, y);
-                Vector3f color = integrator->sample_li(scene, ray);
-                delete ray;
-                if (color.x() < 20.f) {
-                    max_color(0) = max_color.x() > color.x() ? max_color.x() : color.x();
-                }
-                if (color.y() < 20.f) {
-                    max_color(1) = max_color.y() > color.y() ? max_color.y() : color.y();
-                }
-                if (color.z() < 20.f) {
-                    max_color(2) = max_color.z() > color.z() ? max_color.z() : color.z();
-                }
-                // reverse
-                pixels[resolution.x() - x - 1][resolution.y() - y - 1] = color;
-            }
-        }
-        cout << "maxColor=" << vector3fToString(max_color) << endl;
+        /*
+        * zoom the color
+        */
         for (int x = 0; x < resolution.x(); ++x) {
             for (int y = 0; y < resolution.y(); ++y) {
-                //pixels[x][y] = {
-                //    pixels[x][y].x() * 255.f / max_color.x(),
-                //    pixels[x][y].y() * 255.f / max_color.y(),
-                //    pixels[x][y].z() * 255.f / max_color.z()
-                //};
                 pixels[x][y] = {
                     pixels[x][y].x() > 255.f ? 255.f : pixels[x][y].x(),
                     pixels[x][y].y() > 255.f ? 255.f : pixels[x][y].y(),
@@ -125,6 +107,13 @@ namespace pathTracer {
         buffer << "filmC = (" << filmC.x() << ", " << filmC.y() << ", " << filmC.z() << ")" << endl;
         buffer << "filmD = (" << filmD.x() << ", " << filmD.y() << ", " << filmD.z() << ")" << endl;
         return buffer.str();
+    }
+    // only deep copy the object, won't copy the RTCInner things
+    void Camera::deepCopy(Camera*& camera)
+    {
+        camera = new Camera(this->origin, this->lookingAt, this->upAngle, this->f, this->fov, this->zNear, this->zFar, nullptr, this->resolution, nullptr);
+        this->scene->deepCopy(camera->scene);
+        this->integrator->deepCopy(camera->integrator);
     }
 
     Ray *Camera::sample_wi(unsigned int x, unsigned int y) {

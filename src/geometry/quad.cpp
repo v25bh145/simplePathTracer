@@ -93,4 +93,33 @@ namespace pathTracer {
         return outsideNormal;
     }
 
+    void Quad::deepCopy(Geometry*& geometry)
+    {
+        geometry = new Quad();
+        Quad* quad = (Quad*)geometry;
+        quad->p1 = this->p1;
+        quad->p2 = this->p2;
+        quad->p3 = this->p3;
+        quad->p4 = this->p4;
+        quad->emitLight = this->emitLight;
+        quad->outsideNormal = this->outsideNormal;
+        quad->singleSide = this->singleSide;
+        quad->bxdf = nullptr;
+        quad->RTCInnerGeometry = this->RTCInnerGeometry;
+        quad->RTCInnerGeometryId = this->RTCInnerGeometryId;
+        this->bxdf->deepCopy(quad->bxdf);
+    }
+
+    //void Quad::deepCopy(Quad* quad)
+    //{
+    //    quad->vertices = this->vertices;
+    //    quad->indices = this->indices;
+    //    quad->p1 = this->p1; quad->p2 = this->p2; quad->p3 = this->p3; quad->p4 = this->p4;
+    //    quad->outsideNormal = this->outsideNormal;
+    //    quad->singleSide = this->singleSide;
+
+    //    Geometry* thisGeometry = (Geometry*)this;
+    //    thisGeometry->deepCopy(quad);
+    //}
+
 }

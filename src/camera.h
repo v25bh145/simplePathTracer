@@ -66,6 +66,8 @@ namespace pathTracer {
         void generate();
 
         string toString();
+
+        void deepCopy(Camera*& camera);
     };
     class ImageFragment {
     public:
@@ -74,7 +76,9 @@ namespace pathTracer {
         pair<unsigned, unsigned> heightRange;
         Vector3f** pixels;
         ImageFragment(){}
-        ImageFragment(pair<unsigned, unsigned> widthRange, pair<unsigned, unsigned> heightRange, Camera* camera): widthRange(widthRange), heightRange(heightRange), camera(camera) {
+        ImageFragment(pair<unsigned, unsigned> widthRange, pair<unsigned, unsigned> heightRange, Camera* camera): widthRange(widthRange), heightRange(heightRange) {
+            this->camera = nullptr;
+            camera->deepCopy(this->camera);
             int widthFragment = this->widthRange.second - this->widthRange.first;
             int heightFragment = this->heightRange.second - this->heightRange.first;
             pixels = new Vector3f*[widthFragment];

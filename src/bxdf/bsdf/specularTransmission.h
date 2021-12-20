@@ -13,11 +13,21 @@ namespace pathTracer {
     public:
         Vector3f ks;
         // in / transmit
-        float eta;
-        SpecularTransmission(Vector3f ks, float eta):ks(ks), eta(eta) { type = BxDFType::SPECULAR | BxDFType::TRANSMISSION; }
+        float outsideEta;
+        float insideEta;
+        SpecularTransmission(Vector3f ks, float outsideEta, float insideEta):ks(ks), outsideEta(outsideEta), insideEta(insideEta) { 
+            type = BxDFType::SPECULAR | BxDFType::TRANSMISSION; 
+        }
+        SpecularTransmission() {
+            ks = { 0, 0, 0 };
+            outsideEta = insideEta = 0;
+            type = BxDFType::SPECULAR | BxDFType::TRANSMISSION;
+        }
 
         Vector3f sample_f(Interaction *interaction, Ray *wi, float &pdf, int &sampleType) override;
         Vector3f f(Interaction* interaction, Ray* wi, float& pdf) override;
+
+        void deepCopy(BxDF*& bxdf) override;
     };
 }
 

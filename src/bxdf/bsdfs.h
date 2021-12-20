@@ -27,6 +27,7 @@ namespace pathTracer {
         /// sample wi with transforming wo from n given to n=(0, 0, 1) and transform this wi from n=(0, 0, 1) to n given
         Vector3f sample_f(Interaction *interaction, Ray *wi, float &pdf, int &sampleType) override;
         Vector3f f(Interaction* interaction, Ray* wi, float& pdf) override;
+        void deepCopy(BxDF*& bxdf) override;
     };
 }
 

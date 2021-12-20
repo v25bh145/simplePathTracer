@@ -6,9 +6,6 @@
 
 namespace pathTracer {
     unsigned Geometry::RTCInnerObjNumber = 0;
-
-    Geometry::Geometry() {}
-
     Vector3f getMax(Vector3f p1, Vector3f p2) {
         return {
                 p1.x() < p2.x() ? p2.x() : p1.x(),

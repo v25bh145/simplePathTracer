@@ -17,6 +17,8 @@ namespace pathTracer {
     public:
         Integrator() = default;
         virtual Vector3f sample_li(Scene *scene, Ray *origin_ray) = 0;
+        virtual void deepCopy(Integrator*& integrator) = 0;
+        virtual string toString() = 0;
     };
     // wi = nipi/(nipi+njpj)
     float equilibriumHeuristic(int ni, float pi, int nj, float pj);

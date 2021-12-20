@@ -14,6 +14,8 @@ namespace pathTracer {
 
     class Rectangle : public Geometry {
     public:
+        // default will not create new RTCInnerGeometry
+        Rectangle() {}
         Rectangle(Vector3f p1, Vector3f p2, BxDF* bxdf, Vector3f emitLight): Geometry(bxdf, emitLight, nullptr) {
             pMin = getMin(p1, p2);
             pMax = getMax(p1, p2);
@@ -77,6 +79,8 @@ namespace pathTracer {
         unsigned getRTCInnerGeometryId() override;
 
         Vector3f getOutsideNormal() override;
+
+        void deepCopy(Geometry*& geometry) override;
     };
 }
 

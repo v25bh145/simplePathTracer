@@ -60,4 +60,8 @@ namespace pathTracer {
         pdf = 1.f / ( sintheta * PI * PI );
         return kd / PI;
     }
+    void LambertianReflection::deepCopy(BxDF*& bxdf)
+    {
+        bxdf = new LambertianReflection(this->kd);
+    }
 }

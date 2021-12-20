@@ -13,4 +13,14 @@ namespace pathTracer {
     {
         return Vector3f();
     }
+    void BSDFs::deepCopy(BxDF*& bxdf)
+    {
+        vector<BxDF*> newBxDFs;
+        for (auto bxdf : this->BxDFs) {
+            BxDF* newBxdf = nullptr;
+            bxdf->deepCopy(newBxdf);
+            newBxDFs.push_back(newBxdf);
+        }
+        bxdf = new BSDFs(newBxDFs);
+    }
 }

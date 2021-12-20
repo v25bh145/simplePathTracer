@@ -39,8 +39,6 @@ set(
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/specularReflection.h
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/specularTransmission.cpp
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/specularTransmission.h
-        ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/MicrofacetReflection.cpp
-        ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/MicrofacetReflection.h
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/fresnelSpecular.cpp
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/fresnelSpecular.h
         ${PROJECT_SOURCE_DIR}/src/geometry/rectangle.cpp
@@ -61,6 +59,7 @@ set(
         ${PROJECT_SOURCE_DIR}/src/mathHelper.h
         ${PROJECT_SOURCE_DIR}/src/integrator/directIntegrator.h
         ${PROJECT_SOURCE_DIR}/src/integrator/directIntegrator.cpp
+        ${PROJECT_SOURCE_DIR}/src/pathTracer.h
 )
 
 set (

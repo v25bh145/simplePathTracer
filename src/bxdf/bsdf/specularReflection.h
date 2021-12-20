@@ -15,9 +15,15 @@ namespace pathTracer {
         SpecularReflection(Vector3f ks):ks(ks){
             type = BxDFType::SPECULAR | BxDFType::REFLECTION;
         }
+        SpecularReflection() {
+            ks = { 0, 0, 0 };
+            type = BxDFType::SPECULAR | BxDFType::REFLECTION;
+        }
 
         Vector3f sample_f(Interaction *interaction, Ray *wi, float &pdf, int &sampleType) override;
         Vector3f f(Interaction* interaction, Ray* wi, float& pdf) override;
+
+        void deepCopy(BxDF*& bxdf) override;
     };
 }
 

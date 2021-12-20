@@ -128,3 +128,13 @@ target_link_libraries(
         windowsThreadApiTest
         ${EXT_LIBRARIES}
 )
+
+add_executable(
+        deepCopyTest
+        deepCopyTest/deepCopyTest.cpp
+        ${SRCFILES}
+)
+target_link_libraries(
+        deepCopyTest
+        ${EXT_LIBRARIES}
+)

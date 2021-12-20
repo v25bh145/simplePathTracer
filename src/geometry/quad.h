@@ -9,10 +9,9 @@
 
 namespace pathTracer {
     class Quad : public Geometry {
-    private:
-        float *vertices;
-        unsigned *indices;
     public:
+        // default will not create new RTCInnerGeometry
+        Quad(){}
         Quad(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f p4, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false) :p1(p1), p2(p2), p3(p3), p4(p4), outsideNormal(outsideNormal.normalized()), singleSide(singleSide), Geometry(bxdf, emitLight) {
             if (bxdf->hasType(BxDFType::TRANSMISSION) && outsideNormal.x() == 0 && outsideNormal.y() == 0 && outsideNormal.z() == 0) {
                 cout << "must set the outsideNormal when having set TRANSMISSION bxdf" << endl;
@@ -30,7 +29,8 @@ namespace pathTracer {
             indices[0] = 0; indices[1] = 1; indices[2] = 2; indices[3] = 3;
             rtcCommitGeometry(*RTCInnerGeometry);
         }
-
+        float* vertices;
+        unsigned* indices;
         Vector3f p1, p2, p3, p4;
 
         Vector3f outsideNormal;
@@ -49,6 +49,8 @@ namespace pathTracer {
         unsigned getRTCInnerGeometryId() override;
 
         Vector3f getOutsideNormal() override;
+
+        void deepCopy(Geometry*& geometry) override;
     };
 }
 

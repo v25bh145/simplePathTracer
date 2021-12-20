@@ -32,6 +32,7 @@ namespace pathTracer {
         /// \return Vector3f color(percentage)
         /// given sampled wi and calculate pdf & f
         virtual Vector3f f(Interaction* interaction, Ray* wi, float& pdf) = 0;
+        virtual void deepCopy(BxDF*& bxdf) = 0;
     };
 }
 

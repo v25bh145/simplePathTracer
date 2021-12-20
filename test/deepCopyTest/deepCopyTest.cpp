@@ -1,42 +1,20 @@
-#include <Windows.h>
-#include <iostream>
-#include <sstream>
+//
+// Created by v25bh on 2021/12/20.
+//
 #include "../../src/pathTracer.h"
-using namespace std;
+#include <iostream>
 using namespace pathTracer;
-
-#define N 20
-
-DWORD WINAPI ThreadFun(LPVOID lpParameter) {
-    pair<RTCScene*, RTCRay>* information = (pair<RTCScene*, RTCRay>*) lpParameter;
-    RTCRay ray = information->second;
-
-    for (int i = 0; i < 500; ++i) {
-
-        RTCRayHit rayHit;
-        rayHit.ray = ray;
-        rayHit.hit.geomID = RTC_INVALID_GEOMETRY_ID;
-        rayHit.hit.instID[0] = RTC_INVALID_GEOMETRY_ID;
-        struct RTCIntersectContext context;
-        rtcInitIntersectContext(&context);
-
-        RTCScene* scene = information->first;
-        rtcIntersect1(*scene, &context, &rayHit);
-    }
-
-	string info = "";
-	ostringstream buffer(info);
-    buffer << "ray" << vector3fToString({ ray.org_x , ray.org_y, ray.org_z }) << endl;
-	cout << buffer.str();
-	return 0;
-}
+using namespace std;
+/*
+* for multy-thread
+*/
 int main() {
     /*
-* scene creation
-*/
+    * scene creation
+    */
 
-// material creation
-//Vector3f light_ka = { 20, 20, 20 };
+    // material creation
+    //Vector3f light_ka = { 20, 20, 20 };
     Vector3f light_ka = { 7500, 7500, 7500 };
 
     auto* red_diffuse = new LambertianReflection({ 0.63f, 0.065f, 0.05f });
@@ -129,31 +107,20 @@ int main() {
     aggregation->attachAllGeometriesToScene(scene);
     scene->commit();
 
-    RTCScene* rtcScene = scene->RTCInnerScene;
+    cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
 
-	cout << "create thread" << endl;
-	HANDLE* handle = new HANDLE[N];
-	int width = 7;
-	pair<RTCScene*, RTCRay>* information = new pair<RTCScene*, RTCRay>[20];
-	for (int i = 0; i < N; ++i) {
-        information[i].first = rtcScene;
-        RTCRay ray;
-        ray.org_x = ray.org_z = 220; ray.org_y = -1600;
-        RandomGenerator randomGenerator;
-        ray.org_x += randomGenerator.uniform0To1();
-        ray.org_y += randomGenerator.uniform0To1();
-        ray.dir_x = ray.dir_z = 0; ray.dir_y = 1;
-        ray.tnear = ray.time = 0; ray.tfar = numeric_limits<float>::infinity();
-        information[i].second = ray;
+    PathIntegrator* integrator = new PathIntegrator(5, 10);
 
-		// [ first(), second() )
-		handle[i] = CreateThread(NULL, 0, ThreadFun, information + i, 0, NULL);
-	}
-	for (int i = 0; i < N; ++i) {
-		WaitForSingleObject(handle[i], INFINITE);
-	}
-	//for (int i = 0; i < N; ++i) {
-	//	cout << widthRange[i].first << endl;
-	//}
-	return 0;
+    Vector3f cameraOrigin = { 278, -800, 273 };
+    Vector3f cameraLookingAt = { 0, 1, 0 };
+    Vector3f cameraUpAngle = { 0, 0, 1 };
+    Vector2i resolution = { 256, 256 };
+    auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 800, PI / 3, 0, 2000, scene, resolution, integrator);
+    cout << camera->toString() << endl;
+
+    cout << "deep copy the camera" << endl;
+    Camera* newCamera = nullptr;
+    camera->deepCopy(newCamera);
+    cout << newCamera->toString() << endl;
+    cout << newCamera->integrator->toString() << endl;
 }

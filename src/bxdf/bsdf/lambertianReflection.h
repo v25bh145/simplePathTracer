@@ -20,6 +20,8 @@ namespace pathTracer {
 
         Vector3f sample_f(Interaction *interaction, Ray *wi, float &pdf, int &sampleType) override;
         Vector3f f(Interaction* interaction, Ray* wi, float& pdf) override;
+
+        void deepCopy(BxDF*& bxdf) override;
     };
 }
 

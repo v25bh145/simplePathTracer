@@ -13,6 +13,7 @@ namespace pathTracer {
     public:
         Vector3f sample_f(Interaction *interaction, Ray *wi, float &pdf, int &sampleType) override = 0;
         Vector3f f(Interaction* interaction, Ray* wi, float& pdf) override = 0;
+        virtual void deepCopy(BxDF*& bxdf) override = 0;
     };
 }
 

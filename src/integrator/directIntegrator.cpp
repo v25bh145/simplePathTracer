@@ -20,4 +20,15 @@ namespace pathTracer {
 		}
 		else return { 0, 0, 0 };
 	}
+	void DirectIntegrator::deepCopy(Integrator*& integrator)
+	{
+		integrator = new DirectIntegrator(this->sampleOnePixel);
+	}
+	string DirectIntegrator::toString()
+	{
+		string info = "";
+		ostringstream buffer(info);
+		buffer << "directIntegrator: sampleOnePixel=" << sampleOnePixel << endl;
+		return buffer.str();
+	}
 }
