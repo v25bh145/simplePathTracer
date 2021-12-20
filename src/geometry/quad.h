@@ -29,6 +29,8 @@ namespace pathTracer {
             indices[0] = 0; indices[1] = 1; indices[2] = 2; indices[3] = 3;
             rtcCommitGeometry(*RTCInnerGeometry);
         }
+        RTCGeometry* RTCInnerGeometry;
+        unsigned RTCInnerGeometryId;
         float* vertices;
         unsigned* indices;
         Vector3f p1, p2, p3, p4;
@@ -47,6 +49,7 @@ namespace pathTracer {
         void attachAllGeometriesToScene(Scene scene) override;
 
         unsigned getRTCInnerGeometryId() override;
+        RTCGeometry* getRTCInnerGeometry() override;
 
         Vector3f getOutsideNormal() override;
 

@@ -41,8 +41,6 @@ set(
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/specularTransmission.h
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/fresnelSpecular.cpp
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/fresnelSpecular.h
-        ${PROJECT_SOURCE_DIR}/src/geometry/rectangle.cpp
-        ${PROJECT_SOURCE_DIR}/src/geometry/rectangle.h
         ${PROJECT_SOURCE_DIR}/src/camera.cpp
         ${PROJECT_SOURCE_DIR}/src/camera.h
         ${PROJECT_SOURCE_DIR}/src/interaction.cpp

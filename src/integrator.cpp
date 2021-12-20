@@ -29,7 +29,7 @@ namespace pathTracer {
 		auto* lightShadowInteraction = new Interaction(lightShadowRay);
 		unsigned lightShadowHitGeomId = scene->intersect(lightShadowInteraction);
 
-		if (lightShadowHitGeomId == light->RTCInnerGeometryId && lightShadowHitGeomId != p1Geometry->getRTCInnerGeometryId()) {
+		if (lightShadowHitGeomId == light->getRTCInnerGeometryId() && lightShadowHitGeomId != p1Geometry->getRTCInnerGeometryId()) {
 			float light_pdf;
 			Vector3f L_light = light->le(lightShadowInteraction, light_pdf);
 			// not on the light side

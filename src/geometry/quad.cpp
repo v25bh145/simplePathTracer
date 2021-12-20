@@ -84,6 +84,11 @@ namespace pathTracer {
         return this->RTCInnerGeometryId;
     }
 
+    RTCGeometry* Quad::getRTCInnerGeometry()
+    {
+        return this->RTCInnerGeometry;
+    }
+
     Vector3f Quad::getOutsideNormal()
     {
         if (vector3fEqualTo0(outsideNormal)) {

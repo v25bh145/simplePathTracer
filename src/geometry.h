@@ -32,16 +32,11 @@ namespace pathTracer {
         //tips: emitLight = ka
         Vector3f emitLight;
 
-        // null if collection
-        RTCGeometry* RTCInnerGeometry;
-        // -1 if collection
-        unsigned RTCInnerGeometryId;
-
         static unsigned RTCInnerObjNumber;
 
         //Geometry(BxDF* bxdf, Vector3f emitLight = {0, 0, 0}):bxdf(bxdf), emitLight(emitLight) {}
-        Geometry(BxDF* bxdf, Vector3f emitLight = { 0, 0, 0 }, RTCGeometry* RTCInnerGeometry = nullptr, unsigned RTCInnerGeometryId = FATHER_GEOMETRY_ID)
-            :bxdf(bxdf), emitLight(emitLight), RTCInnerGeometry(RTCInnerGeometry), RTCInnerGeometryId(RTCInnerGeometryId){}
+        Geometry(BxDF* bxdf, Vector3f emitLight = { 0, 0, 0 })
+            :bxdf(bxdf), emitLight(emitLight){}
         Geometry() {};
 
         virtual Vector3f sample_point(float& pdf) = 0;
@@ -55,6 +50,7 @@ namespace pathTracer {
         virtual void loadRealGeometryFlush() = 0;
 
         virtual unsigned getRTCInnerGeometryId() = 0;
+        virtual RTCGeometry* getRTCInnerGeometry() = 0;
 
         virtual Vector3f getOutsideNormal() = 0;
 
