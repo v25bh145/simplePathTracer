@@ -18,7 +18,8 @@ namespace pathTracer {
         void deepCopy(Integrator*& integrator) override;
         string toString() override;
     };
-    Vector3f estimateVolumeDirect(Interaction* interaction, Scene* scene);
+    Vector3f estimateVolumeDirect(Interaction* p1, Medium* p1Medium, Scene* scene);
+    Vector3f volumeVisibility(Vector3f origin, Medium* p1Medium, Vector3f destination, Geometry* light, Scene* scene);
 }
 
 #endif

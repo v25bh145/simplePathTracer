@@ -46,6 +46,10 @@ namespace pathTracer {
 
 		*wi = Ray(interaction->p, { wi_world.x(), wi_world.y(), wi_world.z() }, 0);
 	}
+	Vector3f Medium::phase(Interaction* interaction, Ray* wi, float& pdf)
+	{
+		return Vector3f();
+	}
 	Vector3f Medium::tr(float t)
 	{
 		return {

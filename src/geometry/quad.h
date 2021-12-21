@@ -14,7 +14,7 @@ namespace pathTracer {
         Quad(){}
         Quad(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f p4, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false, Medium* outsideMedium = nullptr, Medium* insideMedium = nullptr) :p1(p1), p2(p2), p3(p3), p4(p4), outsideNormal(outsideNormal.normalized()), singleSide(singleSide), Geometry(bxdf, emitLight), outsideMedium(outsideMedium), insideMedium(insideMedium) {
             if (vector3fEqualTo0(outsideNormal)) {
-                if (bxdf->hasType(BxDFType::TRANSMISSION)) {
+                if (bxdf != nullptr && bxdf->hasType(BxDFType::TRANSMISSION)) {
                     cout << "must set the outsideNormal when having set TRANSMISSION bxdf" << endl;
                     assert(false);
                 }
@@ -22,6 +22,10 @@ namespace pathTracer {
                     cout << "must set the outsideNormal when having set medium" << endl;
                     assert(false);
                 }
+            }
+            if (bxdf != nullptr && !bxdf->hasType(BxDFType::TRANSMISSION) && (insideMedium != nullptr || outsideMedium != nullptr)) {
+                cout << "must set the TRANSMISSION bxdf when having set medium" << endl;
+                assert(false);
             }
 
             RTCInnerGeometryId = ++Geometry::RTCInnerObjNumber;

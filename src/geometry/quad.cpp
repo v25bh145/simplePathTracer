@@ -49,7 +49,7 @@ namespace pathTracer {
         // trilerp interpolation
         return point;
     }
-
+    
     Vector3f Quad::le(Interaction* p, float& pdf)
     {
         Vector3f p2light = p->p - p->ray->origin;
@@ -129,7 +129,6 @@ namespace pathTracer {
     {
         return this->insideMedium;
     }
-
     //void Quad::deepCopy(Quad* quad)
     //{
     //    quad->vertices = this->vertices;
