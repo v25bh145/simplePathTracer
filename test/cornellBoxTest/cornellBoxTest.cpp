@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
 
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
 
-    VolumePathIntegrator* integrator = new VolumePathIntegrator(10, 10);
+    PathIntegrator* integrator = new PathIntegrator(10, 10);
 
     Vector3f cameraOrigin = { 278, -800, 273 };
     Vector3f cameraLookingAt = { 0, 1, 0 };
