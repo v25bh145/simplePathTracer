@@ -19,7 +19,7 @@ namespace pathTracer {
         string toString() override;
     };
     Vector3f estimateVolumeDirect(Interaction* p1, Medium* p1Medium, Scene* scene);
-    Vector3f volumeVisibility(Vector3f origin, Medium* p1Medium, Vector3f destination, Geometry* light, Scene* scene);
+    Vector3f volumeVisibility(Vector3f origin, Medium* p1Medium, Vector3f destination, Interaction* lightInteraction, Scene* scene);
 }
 
 #endif

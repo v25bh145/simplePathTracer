@@ -20,11 +20,13 @@ namespace pathTracer {
 		float p_surf(float tMax);
 		float sample_t(float& p_t, Vector3f& tr);
 		void sample_phase(Interaction* interaction, Ray* wi);
-		Vector3f phase(Interaction* interaction, Ray* wi, float& pdf);
+		float phase(Interaction* interaction, Ray* wi);
 		
 		Vector3f tr(float t);
 
 		void deepCopy(Medium*& medium);
+
+		string toString();
 	};
 	Medium* sameSideMedium(Interaction* interaction);
 	Medium* otherSideMedium(Interaction* interaction);

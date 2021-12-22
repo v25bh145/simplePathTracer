@@ -12,7 +12,10 @@ namespace pathTracer {
     public:
         // default will not create new RTCInnerGeometry
         Quad(){}
-        Quad(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f p4, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false, Medium* outsideMedium = nullptr, Medium* insideMedium = nullptr) :p1(p1), p2(p2), p3(p3), p4(p4), outsideNormal(outsideNormal.normalized()), singleSide(singleSide), Geometry(bxdf, emitLight), outsideMedium(outsideMedium), insideMedium(insideMedium) {
+        Quad(Vector3f p1, Vector3f p2, Vector3f p3, Vector3f p4, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false, Medium* outsideMedium = nullptr, Medium* insideMedium = nullptr) 
+            :p1(p1), p2(p2), p3(p3), p4(p4)
+            , outsideNormal(outsideNormal.normalized()), singleSide(singleSide)
+            , Geometry(bxdf, emitLight), outsideMedium(outsideMedium), insideMedium(insideMedium) {
             if (vector3fEqualTo0(outsideNormal)) {
                 if (bxdf != nullptr && bxdf->hasType(BxDFType::TRANSMISSION)) {
                     cout << "must set the outsideNormal when having set TRANSMISSION bxdf" << endl;
@@ -39,6 +42,11 @@ namespace pathTracer {
             unsigned *indices = (unsigned*) rtcSetNewGeometryBuffer(*RTCInnerGeometry, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT4, 4*sizeof(unsigned), 1);
             indices[0] = 0; indices[1] = 1; indices[2] = 2; indices[3] = 3;
             rtcCommitGeometry(*RTCInnerGeometry);
+            cout << "id=" << this->RTCInnerGeometryId << endl;
+            if(this->insideMedium)
+            cout << "insideMedium" << this->insideMedium->toString() << endl;
+            if(this->outsideMedium)
+            cout << "outsideMedium" << this->outsideMedium->toString() << endl;
         }
         RTCGeometry* RTCInnerGeometry;
         unsigned RTCInnerGeometryId;
@@ -69,8 +77,10 @@ namespace pathTracer {
 
         void deepCopy(Geometry*& geometry) override;
 
-        Medium* getOutsideMedium();
-        Medium* getInsideMedium();
+        Medium* getOutsideMedium() override;
+        Medium* getInsideMedium() override;
+
+        string toString() override;
     };
 }
 

@@ -2,6 +2,7 @@
 // Created by v25bh on 2021/12/20.
 //
 #include "medium.h"
+#include "geometry/quad.h"
 
 namespace pathTracer {
 	float Medium::p_surf(float tMax)
@@ -15,7 +16,13 @@ namespace pathTracer {
 		float sigma_t_array[3] = {sigma_t.x(), sigma_t.y(), sigma_t.z()};
 		float sigma_t_channal = sigma_t_array[channal];
 		float u = randomGenerator.uniform0To1();
-		return -log(1 - u) / sigma_t_channal;
+		if (u == 1.f || u == 0.f) u = 0.5f;
+		float moveDistance = -log(1 - u) / sigma_t_channal;
+		tr = this->tr(moveDistance);
+		p_t = (sigma_t.x() * exp(-sigma_t.x() * moveDistance)
+			+ sigma_t.y() * exp(-sigma_t.y() * moveDistance)
+			+ sigma_t.z() * exp(-sigma_t.z() * moveDistance)) / 3.f;
+		return moveDistance;
 	}
 	void Medium::sample_phase(Interaction* interaction, Ray* wi)
 	{
@@ -46,9 +53,10 @@ namespace pathTracer {
 
 		*wi = Ray(interaction->p, { wi_world.x(), wi_world.y(), wi_world.z() }, 0);
 	}
-	Vector3f Medium::phase(Interaction* interaction, Ray* wi, float& pdf)
+	float Medium::phase(Interaction* interaction, Ray* wi)
 	{
-		return Vector3f();
+		float costheta = abs(interaction->ray->direction.dot(wi->direction));
+		return (1.f - g * g) / (pow((1 + g * g + 2 * g * costheta), 1.5f) * (4.f * PI));
 	}
 	Vector3f Medium::tr(float t)
 	{
@@ -61,6 +69,13 @@ namespace pathTracer {
 	void Medium::deepCopy(Medium*& medium)
 	{
 		medium = new Medium(this->sigma_t, this->sigma_s, this->g);
+	}
+	string Medium::toString()
+	{
+		string info = "";
+		ostringstream buffer(info);
+		buffer << "media info: sigma_t=" << vector3fToString(sigma_t) << ", sigma_s=" << vector3fToString(sigma_s) << ", g=" << g << endl;
+		return buffer.str();
 	}
 	Medium* sameSideMedium(Interaction* interaction)
 	{

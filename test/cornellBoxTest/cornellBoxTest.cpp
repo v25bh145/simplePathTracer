@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     auto* specularTransmission = new SpecularTransmission({ 1.f, 1.f, 1.f }, 1.f, 4.f / 3.f);
     auto* fresnelSpecular = new FresnelSpecular({ 1.f, 1.f, 1.f }, { 1.f, 1.f, 1.f }, 1.f, 4.f / 3.f);
 
-    auto* muddyMedium = new Medium({ 0.1f, 0.1f, 0.1f }, { 0.1f, 0.1f, 0.1f });
+    auto* muddyMedium = new Medium({ 0.025f, 0.07f, 0.07f }, { 0.05f, 0.025f, 0.025f });
 
     //geometry creation
     auto* floor = new Quad({ 550, 0, 0 }, { 0, 0, 0 }, { 0, 550, 0 }, { 550, 550, 0 }, white_diffuse, { 0, 0, 0 });
@@ -39,23 +39,23 @@ int main(int argc, char** argv) {
     /*
     * specular transmission
     */
-    auto* short_block_1 = new Quad({ 130, 65, 165 }, { 82, 225, 165 }, { 240, 272, 165 }, { 290, 114, 165 }, fresnelSpecular, { 0, 0, 0 }, { 0, 0, 1 }, nullptr, muddyMedium);
+    auto* short_block_1 = new Quad({ 130, 65, 165 }, { 82, 225, 165 }, { 240, 272, 165 }, { 290, 114, 165 }, white_diffuse, { 0, 0, 0 }, { 0, 0, 1 }, false, nullptr, nullptr);
     Vector3f short_block2_vec1 = { 0, 0, 1 };
     Vector3f short_block2_vec2 = { 50, -158, 0 };
     Vector3f short_block2_vec3 = short_block2_vec1.cross(short_block2_vec2).normalized();
-    auto* short_block_2 = new Quad({ 290, 114, 0 }, { 290, 114, 165 }, { 240, 272, 165 }, { 240, 272, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block2_vec3, { 0, 1, 0 }), nullptr, muddyMedium);
+    auto* short_block_2 = new Quad({ 290, 114, 0 }, { 290, 114, 165 }, { 240, 272, 165 }, { 240, 272, 0 }, white_diffuse, { 0, 0, 0 }, sameSide(short_block2_vec3, { 0, 1, 0 }), false, nullptr, nullptr);
     Vector3f short_block3_vec1 = { 0, 0, 1 };
     Vector3f short_block3_vec2 = { 160, 49, 0 };
     Vector3f short_block3_vec3 = short_block3_vec1.cross(short_block3_vec2).normalized();
-    auto* short_block_3 = new Quad({ 130, 65, 0 }, { 130, 65, 165 }, { 290, 114, 165 }, { 290, 114, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block3_vec3, { 0, -1, 0 }), nullptr, muddyMedium);
+    auto* short_block_3 = new Quad({ 130, 65, 0 }, { 130, 65, 165 }, { 290, 114, 165 }, { 290, 114, 0 }, white_diffuse, { 0, 0, 0 }, sameSide(short_block3_vec3, { 0, -1, 0 }), false, nullptr, nullptr);
     Vector3f short_block4_vec1 = { 0, 0, 1 };
     Vector3f short_block4_vec2 = { 48, -160, 0 };
     Vector3f short_block4_vec3 = short_block4_vec1.cross(short_block4_vec2).normalized();
-    auto* short_block_4 = new Quad({ 82, 225, 0 }, { 82, 225, 165 }, { 130, 65, 165 }, { 130, 65, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block4_vec3, { -1, 0, 0 }), nullptr, muddyMedium);
+    auto* short_block_4 = new Quad({ 82, 225, 0 }, { 82, 225, 165 }, { 130, 65, 165 }, { 130, 65, 0 }, white_diffuse, { 0, 0, 0 }, sameSide(short_block4_vec3, { -1, 0, 0 }), false, nullptr, nullptr);
     Vector3f short_block5_vec1 = { 0, 0, 1 };
     Vector3f short_block5_vec2 = { 158, 47, 0 };
     Vector3f short_block5_vec3 = short_block5_vec1.cross(short_block5_vec2).normalized();
-    auto* short_block_5 = new Quad({ 240, 272, 0 }, { 240, 272, 165 }, { 82, 225, 165 }, { 82, 225, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block5_vec3, { 0, 1, 0 }), nullptr, muddyMedium);
+    auto* short_block_5 = new Quad({ 240, 272, 0 }, { 240, 272, 165 }, { 82, 225, 165 }, { 82, 225, 0 }, white_diffuse, { 0, 0, 0 }, sameSide(short_block5_vec3, { 0, 1, 0 }), false, nullptr, nullptr);
 
     //auto* short_block_1 = new Quad({ 130, 65, 165 }, { 82, 225, 165 }, { 240, 272, 165 }, { 290, 114, 165 }, white_diffuse, { 0, 0, 0 });
     //auto* short_block_2 = new Quad({ 290, 114, 0 }, { 290, 114, 165 }, { 240, 272, 165 }, { 240, 272, 0 }, white_diffuse, { 0, 0, 0 });

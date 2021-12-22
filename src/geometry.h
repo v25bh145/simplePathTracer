@@ -58,6 +58,8 @@ namespace pathTracer {
         virtual Medium* getInsideMedium() = 0;
 
         virtual void deepCopy(Geometry*& geometry) = 0;
+
+        virtual string toString() = 0;
     };
 
     Vector3f getMax(Vector3f p1, Vector3f p2);

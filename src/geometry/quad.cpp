@@ -114,10 +114,10 @@ namespace pathTracer {
         quad->RTCInnerGeometry = this->RTCInnerGeometry;
         quad->RTCInnerGeometryId = this->RTCInnerGeometryId;
         quad->insideMedium = quad->outsideMedium = nullptr;
-        if(insideMedium != nullptr)
-            this->insideMedium->deepCopy(insideMedium);
+        if (insideMedium != nullptr)
+            this->insideMedium->deepCopy(quad->insideMedium);
         if (outsideMedium != nullptr)
-            this->outsideMedium->deepCopy(outsideMedium);
+            this->outsideMedium->deepCopy(quad->outsideMedium);
     }
 
     Medium* Quad::getOutsideMedium()
@@ -129,16 +129,20 @@ namespace pathTracer {
     {
         return this->insideMedium;
     }
-    //void Quad::deepCopy(Quad* quad)
-    //{
-    //    quad->vertices = this->vertices;
-    //    quad->indices = this->indices;
-    //    quad->p1 = this->p1; quad->p2 = this->p2; quad->p3 = this->p3; quad->p4 = this->p4;
-    //    quad->outsideNormal = this->outsideNormal;
-    //    quad->singleSide = this->singleSide;
+    string Quad::toString()
+    {
+        string info = "";
+        ostringstream buffer(info);
+        buffer << "id=" << this->RTCInnerGeometryId << endl;
+        if (this->insideMedium)
+            buffer << "insideMedium = " << this->insideMedium->toString() << endl;
+        else
+            buffer << "insideMedium = nullptr" << endl;
 
-    //    Geometry* thisGeometry = (Geometry*)this;
-    //    thisGeometry->deepCopy(quad);
-    //}
-
+        if (this->outsideMedium)
+            buffer << "outsideMedium = " << this->outsideMedium->toString() << endl;
+        else
+            buffer << "outsideMedium = nullptr" << endl;
+        return buffer.str();
+    }
 }

@@ -24,8 +24,8 @@ namespace pathTracer {
 		Vector3f light_p = light->sample_point(light_area_pdf);
 
 		// light shadow test
-		// won't use wi->direction * 0.1£¬because this function is only called for not using specular
-		Ray* lightShadowRay = new Ray(p1->p + p1->normal * 0.1, light_p);
+		// won't use wi->direction * 0.05f£¬because this function is only called for not using specular
+		Ray* lightShadowRay = new Ray(p1->p + p1->normal * 0.05f, light_p);
 		auto* lightShadowInteraction = new Interaction(lightShadowRay);
 		unsigned lightShadowHitGeomId = scene->intersect(lightShadowInteraction);
 
