@@ -18,7 +18,10 @@ namespace pathTracer {
 			delete p;
 			return sum_L / sampleOnePixel + hitGeometry->emitLight;
 		}
-		else return { 0, 0, 0 };
+		else { 
+			delete p;
+			return { 0, 0, 0 }; 
+		}
 	}
 	void DirectIntegrator::deepCopy(Integrator*& integrator)
 	{

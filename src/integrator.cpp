@@ -34,6 +34,8 @@ namespace pathTracer {
 			Vector3f L_light = light->le(lightShadowInteraction, light_pdf);
 			// not on the light side
 			if (L_light.x() == 0 && L_light.y() == 0 && L_light.z() == 0) {
+				delete lightShadowRay;
+				delete lightShadowInteraction;
 				return { 0, 0, 0 };
 			}
 

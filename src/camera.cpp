@@ -3,7 +3,7 @@
 //
 
 #include "camera.h"
-#define THREAD_N 1
+#define THREAD_N 24
 
 namespace pathTracer {
     DWORD WINAPI generateByThread(LPVOID lpParameter) {

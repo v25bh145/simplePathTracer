@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
     auto* specularTransmission = new SpecularTransmission({ 1.f, 1.f, 1.f }, 1.f, 4.f / 3.f);
     auto* fresnelSpecular = new FresnelSpecular({ 1.f, 1.f, 1.f }, { 1.f, 1.f, 1.f }, 1.f, 4.f / 3.f);
 
-    auto* muddyMedium = new Medium({ 0.025f, 0.07f, 0.07f }, { 0.05f, 0.025f, 0.025f });
+    auto* muddyMedium = new Medium({ 0.025f, 0.005f, 0.005f }, { 0.07f, 0.005f, 0.005f });
 
     //geometry creation
     auto* floor = new Quad({ 550, 0, 0 }, { 0, 0, 0 }, { 0, 550, 0 }, { 550, 550, 0 }, white_diffuse, { 0, 0, 0 });
@@ -39,23 +39,23 @@ int main(int argc, char** argv) {
     /*
     * specular transmission
     */
-    auto* short_block_1 = new Quad({ 130, 65, 165 }, { 82, 225, 165 }, { 240, 272, 165 }, { 290, 114, 165 }, white_diffuse, { 0, 0, 0 }, { 0, 0, 1 }, false, nullptr, nullptr);
+    auto* short_block_1 = new Quad({ 130, 65, 165 }, { 82, 225, 165 }, { 240, 272, 165 }, { 290, 114, 165 }, fresnelSpecular, { 0, 0, 0 }, { 0, 0, 1 }, false, nullptr, muddyMedium);
     Vector3f short_block2_vec1 = { 0, 0, 1 };
     Vector3f short_block2_vec2 = { 50, -158, 0 };
     Vector3f short_block2_vec3 = short_block2_vec1.cross(short_block2_vec2).normalized();
-    auto* short_block_2 = new Quad({ 290, 114, 0 }, { 290, 114, 165 }, { 240, 272, 165 }, { 240, 272, 0 }, white_diffuse, { 0, 0, 0 }, sameSide(short_block2_vec3, { 0, 1, 0 }), false, nullptr, nullptr);
+    auto* short_block_2 = new Quad({ 290, 114, 0 }, { 290, 114, 165 }, { 240, 272, 165 }, { 240, 272, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block2_vec3, { 0, 1, 0 }), false, nullptr, muddyMedium);
     Vector3f short_block3_vec1 = { 0, 0, 1 };
     Vector3f short_block3_vec2 = { 160, 49, 0 };
     Vector3f short_block3_vec3 = short_block3_vec1.cross(short_block3_vec2).normalized();
-    auto* short_block_3 = new Quad({ 130, 65, 0 }, { 130, 65, 165 }, { 290, 114, 165 }, { 290, 114, 0 }, white_diffuse, { 0, 0, 0 }, sameSide(short_block3_vec3, { 0, -1, 0 }), false, nullptr, nullptr);
+    auto* short_block_3 = new Quad({ 130, 65, 0 }, { 130, 65, 165 }, { 290, 114, 165 }, { 290, 114, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block3_vec3, { 0, -1, 0 }), false, nullptr, muddyMedium);
     Vector3f short_block4_vec1 = { 0, 0, 1 };
     Vector3f short_block4_vec2 = { 48, -160, 0 };
     Vector3f short_block4_vec3 = short_block4_vec1.cross(short_block4_vec2).normalized();
-    auto* short_block_4 = new Quad({ 82, 225, 0 }, { 82, 225, 165 }, { 130, 65, 165 }, { 130, 65, 0 }, white_diffuse, { 0, 0, 0 }, sameSide(short_block4_vec3, { -1, 0, 0 }), false, nullptr, nullptr);
+    auto* short_block_4 = new Quad({ 82, 225, 0 }, { 82, 225, 165 }, { 130, 65, 165 }, { 130, 65, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block4_vec3, { -1, 0, 0 }), false, nullptr, muddyMedium);
     Vector3f short_block5_vec1 = { 0, 0, 1 };
     Vector3f short_block5_vec2 = { 158, 47, 0 };
     Vector3f short_block5_vec3 = short_block5_vec1.cross(short_block5_vec2).normalized();
-    auto* short_block_5 = new Quad({ 240, 272, 0 }, { 240, 272, 165 }, { 82, 225, 165 }, { 82, 225, 0 }, white_diffuse, { 0, 0, 0 }, sameSide(short_block5_vec3, { 0, 1, 0 }), false, nullptr, nullptr);
+    auto* short_block_5 = new Quad({ 240, 272, 0 }, { 240, 272, 165 }, { 82, 225, 165 }, { 82, 225, 0 }, fresnelSpecular, { 0, 0, 0 }, sameSide(short_block5_vec3, { 0, 1, 0 }), false, nullptr, muddyMedium);
 
     //auto* short_block_1 = new Quad({ 130, 65, 165 }, { 82, 225, 165 }, { 240, 272, 165 }, { 290, 114, 165 }, white_diffuse, { 0, 0, 0 });
     //auto* short_block_2 = new Quad({ 290, 114, 0 }, { 290, 114, 165 }, { 240, 272, 165 }, { 240, 272, 0 }, white_diffuse, { 0, 0, 0 });
@@ -106,17 +106,18 @@ int main(int argc, char** argv) {
     aggregation->push_back(tall_block_3);
     aggregation->push_back(tall_block_4);
     aggregation->push_back(tall_block_5);
-    aggregation->attachAllGeometriesToScene(scene);
     scene->commit();
 
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
 
-    PathIntegrator* integrator = new PathIntegrator(10, 10);
+    VolumePathIntegrator* integrator = new VolumePathIntegrator(10, 50);
+    //PathIntegrator* integrator = new PathIntegrator(10, 50);
+    //DirectIntegrator* integrator = new DirectIntegrator(50);
 
     Vector3f cameraOrigin = { 278, -800, 273 };
     Vector3f cameraLookingAt = { 0, 1, 0 };
     Vector3f cameraUpAngle = { 0, 0, 1 };
-    Vector2i resolution = { 512, 512 };
+    Vector2i resolution = { 1024, 1024 };
     auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 800, PI / 3, 0, 2000, scene, resolution, integrator);
     cout << camera->toString() << endl;
     cout << "begin generating" << endl;
