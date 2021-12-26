@@ -27,6 +27,8 @@
 
 #include "bxdf/bsdf/fresnelSpecular.h"
 
+#include "bxdf/bsdf/orenNayer.h"
+
 #include "camera.h"
 
 #include "interaction.h"

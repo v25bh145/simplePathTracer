@@ -62,6 +62,8 @@ set(
         ${PROJECT_SOURCE_DIR}/src/medium.h
         ${PROJECT_SOURCE_DIR}/src/integrator/volumePathIntegrator.h
         ${PROJECT_SOURCE_DIR}/src/integrator/volumePathIntegrator.cpp
+        ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/orenNayer.h
+        ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/orenNayer.cpp
 )
 
 set (

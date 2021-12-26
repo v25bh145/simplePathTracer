@@ -17,4 +17,29 @@ namespace pathTracer {
         return dis(gen);
     }
 
+    vector<Vector2f> RandomGenerator::uniform0To1By2D(int size)
+    {
+        vector<Vector2f> randomArray;
+        if (size == 0) return randomArray;
+        for (int i = 0; i < size; ++i) {
+            randomArray.push_back({ uniform0To1(), uniform0To1() });
+        }
+        return randomArray;
+    }
+
+    vector<int> RandomGenerator::shuffleN(int size)
+    {
+        vector<int> shuffleArray;
+        for (int i = 0; i < size; ++i) {
+            shuffleArray.push_back(i);
+        }
+        for (int i = 0; i < size; ++i) {
+            int index = uniformNToM(0, size - 1);
+            int tmp = shuffleArray[i];
+            shuffleArray[i] = shuffleArray[index];
+            shuffleArray[index] = tmp;
+        }
+        return shuffleArray;
+    }
+
 }

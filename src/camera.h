@@ -24,6 +24,7 @@ namespace pathTracer {
         // normalized
         // angle rotated when shooting [Angle System]
         Vector3f upAngle;
+        int sampleOnePixel;
         float fov;
         float zNear;
         float zFar;
@@ -31,6 +32,7 @@ namespace pathTracer {
         float height;
         float width;
         float aspect;
+        Vector2f pixelSize;
         Vector3f XAxle;
         Vector3f filmOrigin;
         Vector3f filmA;
@@ -39,8 +41,8 @@ namespace pathTracer {
         Integrator *integrator;
         Scene *scene;
 
-        Camera(Vector3f origin, Vector3f lookingAt, Vector3f upAngle, float f, float fov, float zNear, float zFar, Scene *scene, Vector2i resolution, Integrator *integrator)
-        :origin(origin), lookingAt(lookingAt.normalized()), upAngle(upAngle.normalized()), f(f), fov(fov),zNear(zNear),zFar(zFar), scene(scene),resolution(resolution),integrator(integrator){
+        Camera(Vector3f origin, Vector3f lookingAt, Vector3f upAngle, float f, float fov, float zNear, float zFar, Scene *scene, Vector2i resolution, Integrator *integrator, int sampleOnePixel)
+        :origin(origin), lookingAt(lookingAt.normalized()), upAngle(upAngle.normalized()), f(f), fov(fov),zNear(zNear),zFar(zFar), scene(scene),resolution(resolution),integrator(integrator), sampleOnePixel(sampleOnePixel > 0 ? sampleOnePixel : 1){
             pixels = new Vector3f*[this->resolution.x()];
             for(int i = 0; i < this->resolution.x(); ++i)
                 pixels[i] = new Vector3f[this->resolution.y()];
@@ -58,9 +60,13 @@ namespace pathTracer {
             filmB = filmOrigin + height * upAngle / 2 + width * XAxle / 2;
             filmC = filmOrigin - height * upAngle / 2 - width * XAxle / 2;
             filmD = filmOrigin - height * upAngle / 2 + width * XAxle / 2;
+
+            pixelSize.x() = width / resolution.y();
+            pixelSize.y() = height / resolution.x();
         };
 
-        Ray *sample_wi(unsigned x, unsigned y);
+        Ray *sample_wi(float x, float y);
+        vector<Ray*> sample_wi_LHS(float x_center, float y_center);
 
         void generate();
 

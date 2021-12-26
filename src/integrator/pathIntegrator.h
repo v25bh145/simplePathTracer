@@ -11,9 +11,8 @@ namespace pathTracer {
     class PathIntegrator : public Integrator {
     public:
         int maxDepth;
-        int sampleOnePixel;
-        PathIntegrator() { maxDepth = 0; sampleOnePixel = 1; }
-        PathIntegrator(int maxDepth, int sampleOnePixel):maxDepth(maxDepth), sampleOnePixel(sampleOnePixel > 1 ? sampleOnePixel : 1){}
+        PathIntegrator() { maxDepth = 0; }
+        PathIntegrator(int maxDepth):maxDepth(maxDepth){}
         Vector3f sample_li(Scene *scene, Ray *origin_ray) override;
         void deepCopy(Integrator*& integrator) override;
         string toString() override;

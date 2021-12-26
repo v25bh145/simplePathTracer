@@ -14,8 +14,8 @@ int main(int argc, char** argv) {
     */
 
     // material creation
-    //Vector3f light_ka = { 20, 20, 20 };
-    Vector3f light_ka = { 7500, 7500, 7500 };
+    Vector3f light_ka = { 256, 256, 256 };
+    //Vector3f light_ka = { 7500, 7500, 7500 };
 
     auto* red_diffuse = new LambertianReflection({ 0.63f, 0.065f, 0.05f });
     auto* specularReflection = new SpecularReflection({ 1.f, 1.f, 1.f });
@@ -25,17 +25,18 @@ int main(int argc, char** argv) {
     auto* light_diffuse = new LambertianReflection({ 0, 0, 0 });
     auto* specularTransmission = new SpecularTransmission({ 1.f, 1.f, 1.f }, 1.f, 4.f / 3.f);
     auto* fresnelSpecular = new FresnelSpecular({ 1.f, 1.f, 1.f }, { 1.f, 1.f, 1.f }, 1.f, 4.f / 3.f);
+    auto* orenNayerRed = new OrenNayer({ 0.63f, 0.065f, 0.05f }, 10.f);
 
     auto* muddyMedium = new Medium({ 0.025f, 0.005f, 0.005f }, { 0.07f, 0.005f, 0.005f });
 
     //geometry creation
     auto* floor = new Quad({ 550, 0, 0 }, { 0, 0, 0 }, { 0, 550, 0 }, { 550, 550, 0 }, white_diffuse, { 0, 0, 0 });
     auto* light = new Quad({ 340, 230, 549.9 }, { 340, 330, 549.9 }, { 210, 330, 549.9 }, { 210, 230, 549.9 }, light_diffuse, light_ka, { 0, 0, -1 }, true);
-    auto* ceiling = new Quad({ 550, 0, 550 }, { 550, 550, 550 }, { 0, 550, 550 }, { 0, 0, 550 }, white_diffuse, { 0, 0, 0 });
+    auto* ceiling = new Quad({ 550, 0, 550 }, { 550, 550, 550 }, { 0, 550, 550 }, { 0, 0, 550 }, blue_diffuse, { 0, 0, 0 });
     auto* back_wall = new Quad({ 550, 550, 0 }, { 0, 550, 0 }, { 0, 550, 550 }, { 550, 550, 550 }, white_diffuse, { 0, 0, 0 });
     //    auto *front_wall = new Quad({550, 0, 0}, {0, 0, 0}, {0, 0, 550}, {550, 0, 550}, white_diffuse, {0, 0, 0});
-    auto* green_wall = new Quad({ 0, 550, 0 }, { 0, 0, 0 }, { 0, 0, 550 }, { 0, 550, 550 }, blue_diffuse, { 0, 0, 0 });
-    auto* red_wall = new Quad({ 550, 0, 0 }, { 550, 550, 0 }, { 550, 550, 550 }, { 550, 0, 550 }, red_diffuse, {0, 0, 0}, { -1, 0, 0 }, true);
+    auto* green_wall = new Quad({ 0, 550, 0 }, { 0, 0, 0 }, { 0, 0, 550 }, { 0, 550, 550 }, green_diffuse, { 0, 0, 0 });
+    auto* red_wall = new Quad({ 550, 0, 0 }, { 550, 550, 0 }, { 550, 550, 550 }, { 550, 0, 550 }, orenNayerRed, {0, 0, 0}, { -1, 0, 0 }, true);
     /*
     * specular transmission
     */
@@ -110,15 +111,15 @@ int main(int argc, char** argv) {
 
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
 
-    VolumePathIntegrator* integrator = new VolumePathIntegrator(10, 50);
-    //PathIntegrator* integrator = new PathIntegrator(8, 10);
-    //DirectIntegrator* integrator = new DirectIntegrator(50);
+    VolumePathIntegrator* integrator = new VolumePathIntegrator(8);
+    //PathIntegrator* integrator = new PathIntegrator(8);
+    //DirectIntegrator* integrator = new DirectIntegrator();
 
     Vector3f cameraOrigin = { 278, -800, 273 };
     Vector3f cameraLookingAt = { 0, 1, 0 };
     Vector3f cameraUpAngle = { 0, 0, 1 };
     Vector2i resolution = { 512, 512 };
-    auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 800, PI / 3, 0, 2000, scene, resolution, integrator);
+    auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 800, PI / 3, 0, 2000, scene, resolution, integrator, 20);
     cout << camera->toString() << endl;
     cout << "begin generating" << endl;
     camera->generate();

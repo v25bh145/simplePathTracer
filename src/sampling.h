@@ -21,6 +21,9 @@ namespace pathTracer {
 
         float uniform0To1();
         int uniformNToM(int n, int m);
+        vector<Vector2f> uniform0To1By2D(int size);
+        // e.g: size==5: 54213 13254 13245
+        vector<int> shuffleN(int size);
     };
 }
 

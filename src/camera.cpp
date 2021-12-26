@@ -13,12 +13,27 @@ namespace pathTracer {
             xHigh = imageFragment->widthRange.second,
             yLow = imageFragment->heightRange.first,
             yHigh = imageFragment->heightRange.second;
+        Vector2f pixelSize = imageFragment->camera->pixelSize;
         for (int x = xLow; x < xHigh; ++x) {
             for (int y = yLow; y < yHigh; ++y) {
-                Ray* ray = camera->sample_wi(x, y);
-                Vector3f pixel = camera->integrator->sample_li(camera->scene, ray);
-                imageFragment->pixels[x - xLow][y - yLow] = pixel;
-                delete ray;
+                float x_pixel = x + pixelSize.x() / 2;
+                float y_pixel = y + pixelSize.y() / 2;
+                // LHS
+                vector<Ray*> ray_N = camera->sample_wi_LHS(x_pixel, y_pixel);
+                Vector3f color_N = { 0.f, 0.f, 0.f };
+                for (auto ray : ray_N) {
+                    Vector3f color = camera->integrator->sample_li(camera->scene, ray);
+                    // TODO [correction: numerical error]
+                    if (color.x() < 256.f && color.y() < 256.f && color.z() < 256.f)
+                        color *= 30.f;
+                    color_N += color;
+                    delete ray;
+                }
+                imageFragment->pixels[x - xLow][y - yLow] = color_N / ray_N.size();
+                //Ray* ray = camera->sample_wi(x_pixel, y_pixel);
+                //Vector3f pixel = camera->integrator->sample_li(camera->scene, ray);
+                //imageFragment->pixels[x - xLow][y - yLow] = pixel;
+                //delete ray;
             }
         }
         return 0;
@@ -107,18 +122,19 @@ namespace pathTracer {
         buffer << "filmB = (" << filmB.x() << ", " << filmB.y() << ", " << filmB.z() << ")" << endl;
         buffer << "filmC = (" << filmC.x() << ", " << filmC.y() << ", " << filmC.z() << ")" << endl;
         buffer << "filmD = (" << filmD.x() << ", " << filmD.y() << ", " << filmD.z() << ")" << endl;
+        buffer << "pixelSize = (" << pixelSize.x() << ", " << pixelSize.y() << ")" << endl;
         return buffer.str();
     }
     // only deep copy the object, won't copy the RTCInner things
     void Camera::deepCopy(Camera*& camera)
     {
-        camera = new Camera(this->origin, this->lookingAt, this->upAngle, this->f, this->fov, this->zNear, this->zFar, nullptr, this->resolution, nullptr);
+        camera = new Camera(this->origin, this->lookingAt, this->upAngle, this->f, this->fov, this->zNear, this->zFar, nullptr, this->resolution, nullptr, this->sampleOnePixel);
         this->scene->deepCopy(camera->scene);
         this->integrator->deepCopy(camera->integrator);
     }
 
-    Ray *Camera::sample_wi(unsigned int x, unsigned int y) {
-        Vector3f point = filmA + x * width * XAxle / resolution.x() - y * height * upAngle / resolution.y();
+    Ray *Camera::sample_wi(float x, float y) {
+        Vector3f point = filmA + x * width * XAxle / (float)resolution.x() - y * height * upAngle / (float)resolution.y();
 
         Vector3f dir = origin - point;
         float dir_norm = dir.norm();
@@ -131,5 +147,23 @@ namespace pathTracer {
         //cout << "generate camera ray:" << ray->toString() << endl;
 
         return ray;
+    }
+    vector<Ray*> Camera::sample_wi_LHS(float x_center, float y_center)
+    {
+        RandomGenerator randomGenerator;
+        vector<Ray*> ray_N;
+        Vector2f upperLeft = { x_center - pixelSize.x() / 2, y_center - pixelSize.y() / 2 };
+        Vector2f stride = pixelSize / (int)sampleOnePixel;
+
+        vector<Vector2f> u2D = randomGenerator.uniform0To1By2D(sampleOnePixel);
+        vector<int> shuffleArray = randomGenerator.shuffleN(sampleOnePixel);
+
+        for (int i = 0; i < sampleOnePixel; ++i) {
+            float x = upperLeft.x() + ((float)i + u2D[i].x()) * stride.x();
+            float y = upperLeft.y() + ((float)shuffleArray[i] + u2D[i].y()) * stride.y();
+            //cout << "(x, y)=(" << x << ", " << y << ")" << endl;
+            ray_N.push_back(sample_wi(x, y));
+        }
+        return ray_N;
     }
 }

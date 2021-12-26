@@ -11,12 +11,9 @@ namespace pathTracer {
 		unsigned hitId = scene->intersect(p);
 		if (hitId > 0) {
 			Geometry *hitGeometry = p->geometry;
-			Vector3f sum_L = { 0, 0, 0 };
-			for (int i = 0; i < sampleOnePixel; ++i) {
-				sum_L += estimateDirect(p, hitGeometry, scene);
-			}
+			Vector3f L = estimateDirect(p, hitGeometry, scene);
 			delete p;
-			return sum_L / sampleOnePixel + hitGeometry->emitLight;
+			return L + hitGeometry->emitLight;
 		}
 		else { 
 			delete p;
@@ -25,13 +22,13 @@ namespace pathTracer {
 	}
 	void DirectIntegrator::deepCopy(Integrator*& integrator)
 	{
-		integrator = new DirectIntegrator(this->sampleOnePixel);
+		integrator = new DirectIntegrator();
 	}
 	string DirectIntegrator::toString()
 	{
 		string info = "";
 		ostringstream buffer(info);
-		buffer << "directIntegrator: sampleOnePixel=" << sampleOnePixel << endl;
+		buffer << "directIntegrator" << endl;
 		return buffer.str();
 	}
 }
