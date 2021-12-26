@@ -42,13 +42,11 @@ namespace pathTracer {
 			float light_bxdf_pdf;
 			Vector3f F_light = p1Geometry->bxdf->f(p1, lightShadowRay, light_bxdf_pdf);
 			//light_bxdf_pdf = abs(p1->normal.dot(p2light.normalized())) / (2 * PI);
-
 			L = {
 				L_light.x() * F_light.x(),
 				L_light.y() * F_light.y(),
 				L_light.z() * F_light.z()
 			};
-
 			Vector3f p2light = lightShadowInteraction->p - p1->p;
 			L *= abs(p1->normal.dot(p2light.normalized()));
 

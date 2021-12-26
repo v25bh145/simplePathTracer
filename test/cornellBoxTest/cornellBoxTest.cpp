@@ -111,13 +111,13 @@ int main(int argc, char** argv) {
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
 
     VolumePathIntegrator* integrator = new VolumePathIntegrator(10, 50);
-    //PathIntegrator* integrator = new PathIntegrator(10, 50);
+    //PathIntegrator* integrator = new PathIntegrator(8, 10);
     //DirectIntegrator* integrator = new DirectIntegrator(50);
 
     Vector3f cameraOrigin = { 278, -800, 273 };
     Vector3f cameraLookingAt = { 0, 1, 0 };
     Vector3f cameraUpAngle = { 0, 0, 1 };
-    Vector2i resolution = { 1024, 1024 };
+    Vector2i resolution = { 512, 512 };
     auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 800, PI / 3, 0, 2000, scene, resolution, integrator);
     cout << camera->toString() << endl;
     cout << "begin generating" << endl;

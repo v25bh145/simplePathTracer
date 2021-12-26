@@ -113,7 +113,7 @@ namespace pathTracer {
                     //cout << "estimateVolumeDirect" << endl;
                     // use constructed hitInteraction[not have normal, geometry*]
                     Medium* medium = hitGeometry->getInsideMedium();
-                    Vector3f Ld = estimateVolumeDirect(hitInteraction, medium, scene);
+                    Vector3f Ld = estimateVolumeDirect(hitInteraction, nullptr, scene, medium);
                     Vector3f mul = {
                         Ld.x() * beta.x(),
                         Ld.y() * beta.y(),
@@ -131,7 +131,7 @@ namespace pathTracer {
                 }
                 else {
                     // normal path tracer
-                    ////cout << "estimateDirect" << endl;
+                    ////cout << "estimateVolumeDirect(null)" << endl;
                     // if this is the first ray OR the last ray sampled has a type SPECULAR
                     if (bounce == 0 || isSpecular) {
                         // if the ray hit a geometry, add this geometry's emitLight
@@ -161,7 +161,7 @@ namespace pathTracer {
                     // calculate the radiance from this point to the interaction point, multiply the weight beta
                     if (!hitGeometry->bxdf->hasType(BxDFType::SPECULAR)) {
                         // IS
-                        Vector3f Ld = estimateDirect(hitInteraction, hitGeometry, scene);
+                        Vector3f Ld = estimateVolumeDirect(hitInteraction, hitGeometry, scene, nullptr);
                         Vector3f mul = {
                             Ld.x() * beta.x(),
                             Ld.y() * beta.y(),
@@ -257,7 +257,7 @@ namespace pathTracer {
         buffer << "volumePathIntegrator: (maxDepth, sampleOnePixel)=(" << maxDepth << ", " << sampleOnePixel << ")" << endl;
         return buffer.str();
     }
-    Vector3f estimateVolumeDirect(Interaction* p1, Medium* p1Medium, Scene* scene)
+    Vector3f estimateVolumeDirect(Interaction* p1, Geometry* p1Geometry, Scene* scene, Medium* p1Medium = nullptr)
     {
         Vector3f L = { 0, 0, 0 };
         // select a light [selectLightPDF = 1 / lightsNum]
@@ -265,38 +265,59 @@ namespace pathTracer {
         // no use
         float light_area_pdf;
         Vector3f light_p = light->sample_point(light_area_pdf);
-        Vector3f p1_p = p1->p + p1->ray->direction * 0.05f;
+        Vector3f dir = (light_p - p1->p).normalized();
+        Vector3f p1_p = p1->p + dir * 0.05f;
         Ray* wi = new Ray(p1_p, light_p);
         Interaction* lightInteraction = new Interaction(wi);
+        
         lightInteraction->p = light_p;
         lightInteraction->geometry = light;
         // update lightInteraction->normal
-        Vector3f Tr = volumeVisibility(p1_p, p1Medium, light_p, lightInteraction, scene);
-        if (vector3fEqualTo0(Tr)) { 
+        Vector3f Tr;
+        if (p1Geometry && p1Geometry->getRTCInnerGeometryId() == light->getRTCInnerGeometryId())
+            Tr = { 1.f, 1.f, 1.f };
+        else
+            Tr = volumeVisibility(p1_p, p1Medium, light_p, lightInteraction, scene);
+        if (vector3fEqualTo0(Tr)) {
             //cout << "Tr=0.f, 退出" << endl;
             delete wi;
             delete lightInteraction;
             return { 0, 0, 0 };
         };
 
-        float light_phase_pdf = p1Medium->phase(p1, wi);
-        Vector3f Phase_light = { light_phase_pdf , light_phase_pdf , light_phase_pdf };
+        Vector3f p2light = lightInteraction->p - p1_p;
         float light_pdf;
         Vector3f L_light = light->le(lightInteraction, light_pdf);
-        if (vector3fEqualTo0(L_light)) { 
+        if (vector3fEqualTo0(L_light)) {
             //cout << "L_light=0.f, 退出" << endl;
             delete wi;
             delete lightInteraction;
             return { 0, 0, 0 };
         }
-        L = {
-            L_light.x() * Phase_light.x() * Tr.x(),
-            L_light.y() * Phase_light.y() * Tr.y(),
-            L_light.z() * Phase_light.z() * Tr.z()
-        };
 
-        Vector3f p2light = lightInteraction->p - p1_p;
-        L *= abs(p1->ray->direction.dot(p2light.normalized()));
+        if (p1Geometry == nullptr) {
+            // point in the geometry
+            float light_phase_pdf = p1Medium->phase(p1, wi);
+            Vector3f Phase_light = { light_phase_pdf , light_phase_pdf , light_phase_pdf };
+            L = {
+                L_light.x() * Phase_light.x() * Tr.x(),
+                L_light.y() * Phase_light.y() * Tr.y(),
+                L_light.z() * Phase_light.z() * Tr.z()
+            };
+            L *= abs(p1->ray->direction.dot(p2light.normalized()));
+        }
+        else {
+            // point in geometry's surface
+            float light_bxdf_pdf;
+            Vector3f F_light = p1Geometry->bxdf->f(p1, wi, light_bxdf_pdf);
+            //light_bxdf_pdf = abs(p1->normal.dot(p2light.normalized())) / (2 * PI);
+            L = {
+                L_light.x() * F_light.x() * Tr.x(),
+                L_light.y() * F_light.y() * Tr.y(),
+                L_light.z() * F_light.z() * Tr.z()
+            };
+            L *= abs(p1->normal.dot(p2light.normalized()));
+        }
 
         L /= light_pdf;
 
@@ -317,30 +338,34 @@ namespace pathTracer {
         Vector3f now_p = origin;
         Medium* nowMedium = p1Medium;
         unsigned nowHitGeomId = -1;
-        ////cout << "起始点" << vector3fToString(now_p) << ", 目标:" << vector3fToString(destination) << ", 距离=" << distance << endl;
-        ////cout << "开始迭代" << endl;
+        //cout << "起始点" << vector3fToString(now_p) << ", 目标:" << vector3fToString(destination) << ", 距离=" << distance << endl;
+        //cout << "开始迭代" << endl;
         while (sumDistance < distance && nowHitGeomId != light->getRTCInnerGeometryId()) {
             Ray* nowRay = new Ray(now_p, destination);
             Interaction* nowInteraction = new Interaction(nowRay);
             nowHitGeomId = scene->intersect(nowInteraction);
             if (nowHitGeomId <= 0) {
+                // parallel to the Quad[or light defined by delta]
                 //cout << "fatal: unexpected intersect called by volumeVisibility()" << endl;
-                assert(false);
+                //assert(false);
+                delete nowRay;
+                delete nowInteraction;
+                return { 0, 0, 0 };
             }
             float time = nowInteraction->time;
-            ////cout << "id=" << nowHitGeomId << endl;
+            //cout << "id=" << nowHitGeomId << endl;
             if (nowMedium != nullptr) {
                 Vector3f nowTr = nowMedium->tr(time);
                 //cout << "time=" << time << ", nowTr=" << vector3fToString(nowTr) << endl;
                 Tr = { Tr.x() * nowTr.x(), Tr.y() * nowTr.y(), Tr.z() * nowTr.z() };
             }
             sumDistance += time + 0.05f;
-            ////cout << "距离=" << time << "已走距离=" << sumDistance << endl;
+            //cout << "距离=" << time << "已走距离=" << sumDistance << endl;
             nowMedium = sameSideMedium(nowInteraction);
             //if (nowMedium != nullptr)
-            //    //cout << nowMedium->toString() << endl;
+            //    cout << nowMedium->toString() << endl;
             //else
-            //    //cout << "外侧空介质" << endl;
+            //    cout << "外侧空介质" << endl;
             if (nowInteraction->geometry->getRTCInnerGeometryId() != light->getRTCInnerGeometryId() && nowInteraction->geometry->getInsideMedium() == nullptr && nowInteraction->geometry->getOutsideMedium() == nullptr) {
                 delete nowRay;
                 delete nowInteraction;
@@ -352,7 +377,7 @@ namespace pathTracer {
             delete nowRay;
             delete nowInteraction;
         }
-        ////cout << "结束迭代, Tr=" << vector3fToString(Tr) << endl;
+        //cout << "结束迭代, Tr=" << vector3fToString(Tr) << endl;
         return Tr;
     }
 }
