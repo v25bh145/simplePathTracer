@@ -3,7 +3,7 @@
 //
 
 #include "camera.h"
-#define THREAD_N 16
+#define THREAD_N 1
 
 namespace pathTracer {
     DWORD WINAPI generateByThread(LPVOID lpParameter) {
@@ -24,8 +24,8 @@ namespace pathTracer {
                 for (auto ray : ray_N) {
                     Vector3f color = camera->integrator->sample_li(camera->scene, ray);
                     // TODO [correction: numerical error]
-                    if (color.x() < 256.f && color.y() < 256.f && color.z() < 256.f)
-                        color *= 30.f;
+                    //if (color.x() < 256.f && color.y() < 256.f && color.z() < 256.f)
+                    //    color *= 30.f;
                     color_N += color;
                     delete ray;
                 }
@@ -92,15 +92,15 @@ namespace pathTracer {
         /*
         * zoom the color
         */
-        for (int x = 0; x < resolution.x(); ++x) {
-            for (int y = 0; y < resolution.y(); ++y) {
-                pixels[x][y] = {
-                    pixels[x][y].x() > 255.f ? 255.f : pixels[x][y].x(),
-                    pixels[x][y].y() > 255.f ? 255.f : pixels[x][y].y(),
-                    pixels[x][y].z() > 255.f ? 255.f : pixels[x][y].z()
-                };
-            }
-        }
+        //for (int x = 0; x < resolution.x(); ++x) {
+        //    for (int y = 0; y < resolution.y(); ++y) {
+        //        pixels[x][y] = {
+        //            pixels[x][y].x() > 255.f ? 255.f : pixels[x][y].x(),
+        //            pixels[x][y].y() > 255.f ? 255.f : pixels[x][y].y(),
+        //            pixels[x][y].z() > 255.f ? 255.f : pixels[x][y].z()
+        //        };
+        //    }
+        //}
     }
 
     string Camera::toString() {

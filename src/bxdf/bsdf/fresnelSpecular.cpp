@@ -65,4 +65,9 @@ namespace pathTracer {
         float costheta = abs(interaction->normal.dot(interaction->ray->direction));
         return F0 + (1.f - F0) * pow(1.f - costheta, 5);
     }
+    const float F0_iron = 0.57f;
+    float FrIron(Vector3f normal, Vector3f wo_dir) {
+        float costheta = abs(normal.dot(wo_dir));
+        return F0_iron + (1.f - F0_iron) * pow(1.f - costheta, 5);
+    }
 }

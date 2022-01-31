@@ -138,3 +138,13 @@ target_link_libraries(
         deepCopyTest
         ${EXT_LIBRARIES}
 )
+
+add_executable(
+        parameterizedCornellBoxTest
+        cornellBoxTest/parameterizedCornellBoxTest.cpp
+        ${SRCFILES}
+)
+target_link_libraries(
+        parameterizedCornellBoxTest
+        ${EXT_LIBRARIES}
+)

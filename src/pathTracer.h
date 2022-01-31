@@ -29,11 +29,15 @@
 
 #include "bxdf/bsdf/orenNayer.h"
 
+#include "bxdf/bsdf/microfacet.h"
+
 #include "camera.h"
 
 #include "interaction.h"
 
 #include "geometry/quad.h"
+
+#include "geometry/triangle.h"
 
 #include "integrator.h"
 

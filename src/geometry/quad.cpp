@@ -57,9 +57,9 @@ namespace pathTracer {
             pdf = 0;
             return { 0, 0, 0 };
         }
-        float dis = p2light.norm();
+        float dir = p2light.norm();
         float abscostheta = abs(p->normal.dot(p2light.normalized()));
-        pdf = dis * dis / (abscostheta * area());
+        pdf = dir * dir / (abscostheta * area());
         return emitLight;
     }
 
@@ -75,7 +75,6 @@ namespace pathTracer {
     }
 
     void Quad::attachAllGeometriesToScene(Scene scene) {
-        cout<<"attach geometry to scene"<<endl;
         rtcAttachGeometryByID(*scene.RTCInnerScene, *RTCInnerGeometry, RTCInnerGeometryId);
     }
 
@@ -133,7 +132,7 @@ namespace pathTracer {
     {
         string info = "";
         ostringstream buffer(info);
-        buffer << "id=" << this->RTCInnerGeometryId << endl;
+        buffer << "id=" << this->RTCInnerGeometryId << ", type=quad" << endl;
         if (this->insideMedium)
             buffer << "insideMedium = " << this->insideMedium->toString() << endl;
         else

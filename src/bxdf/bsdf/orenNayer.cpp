@@ -73,7 +73,7 @@ namespace pathTracer {
 
         Vector3f wi_world = wi->direction;
         Vector3f wi_obj = trans_world_obj * wi_world;
-        Vector3f wo_world = interaction->ray->direction;
+        Vector3f wo_world = -interaction->ray->direction;
         Vector3f wo_obj = trans_world_obj * wo_world;
 
         float costheta_o = wo_obj.z();

@@ -28,7 +28,6 @@ namespace pathTracer {
         rtcInitIntersectContext(&context);
 
         rtcIntersect1(*RTCInnerScene, &context, &rayHit);
-
         if(rayHit.hit.geomID != RTC_INVALID_GEOMETRY_ID) {
             //interaction->ray->updateRay(rayHit.ray);
 
@@ -53,12 +52,12 @@ namespace pathTracer {
                 interaction->geometry = aggregation->findGeometryById(rayHit.hit.geomID);
             else
                 interaction->geometry = nullptr;
-//            cout<<"Hit the geometry which id is: "<<rayHit.hit.geomID<<endl;
-//            cout<<"Hit information: "<<endl;
-//            cout<<"time="<<rayHit.ray.time<<endl;
-//            cout<<"(tFar="<<rayHit.ray.tfar<<", tNear="<<rayHit.ray.tnear<<")"<<endl;
-//            cout<<"n("<<rayHit.hit.Ng_x<<", "<<rayHit.hit.Ng_y<<", "<<rayHit.hit.Ng_z<<")"<<endl;
-//            cout<<"(u="<<rayHit.hit.u<<", v="<<rayHit.hit.v<<")"<<endl;
+            //cout<<"Hit the geometry which id is: "<<rayHit.hit.geomID<<endl;
+            //cout<<"Hit information: "<<endl;
+            //cout<<"time="<<rayHit.ray.time<<endl;
+            //cout<<"(tFar="<<rayHit.ray.tfar<<", tNear="<<rayHit.ray.tnear<<")"<<endl;
+            //cout<<"n("<<rayHit.hit.Ng_x<<", "<<rayHit.hit.Ng_y<<", "<<rayHit.hit.Ng_z<<")"<<endl;
+            //cout<<"(u="<<rayHit.hit.u<<", v="<<rayHit.hit.v<<")"<<endl;
 
             return rayHit.hit.geomID;
         }

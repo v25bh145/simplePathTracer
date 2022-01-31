@@ -33,6 +33,7 @@ namespace pathTracer {
     };
     // dielectric [¾øÔµÌå]
     float FrDielectric(Interaction* interaction);
+    float FrIron(Vector3f normal, Vector3f wo_dir);
 }
 
 #endif //SIMPLEPATHTRACER_FRESNELSPECULAR_H

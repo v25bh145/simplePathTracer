@@ -136,7 +136,6 @@ namespace pathTracer {
         }
         //cout << "L=" << vector3fToString(L) << endl;
         delete ray;
-        //cout << "sum_L" << vector3fToString(sum_L) << endl;
         return L;
     }
     void PathIntegrator::deepCopy(Integrator*& integrator)

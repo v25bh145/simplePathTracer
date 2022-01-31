@@ -47,6 +47,8 @@ set(
         ${PROJECT_SOURCE_DIR}/src/interaction.h
         ${PROJECT_SOURCE_DIR}/src/geometry/quad.cpp
         ${PROJECT_SOURCE_DIR}/src/geometry/quad.h
+        ${PROJECT_SOURCE_DIR}/src/geometry/triangle.cpp
+        ${PROJECT_SOURCE_DIR}/src/geometry/triangle.h
         ${PROJECT_SOURCE_DIR}/src/integrator.cpp
         ${PROJECT_SOURCE_DIR}/src/integrator.h
         ${PROJECT_SOURCE_DIR}/src/integrator/pathIntegrator.cpp
@@ -64,6 +66,8 @@ set(
         ${PROJECT_SOURCE_DIR}/src/integrator/volumePathIntegrator.cpp
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/orenNayer.h
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/orenNayer.cpp
+        ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/microfacet.h
+        ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/microfacet.cpp
 )
 
 set (
