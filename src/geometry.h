@@ -38,10 +38,12 @@ namespace pathTracer {
         //Geometry(BxDF* bxdf, Vector3f emitLight = {0, 0, 0}):bxdf(bxdf), emitLight(emitLight) {}
         Geometry(BxDF* bxdf, Vector3f emitLight = { 0, 0, 0 })
             :bxdf(bxdf), emitLight(emitLight){}
-        Geometry() {};
+        Geometry() {
+            bxdf = nullptr;
+        };
 
         virtual Vector3f sample_point(float& pdf) = 0;
-        virtual Vector3f le(Interaction *p, float &pdf) = 0;
+        virtual Vector3f le(Interaction* p1, Interaction* pLight, float& wi_pdf) = 0;
 
         virtual float area() = 0;
 

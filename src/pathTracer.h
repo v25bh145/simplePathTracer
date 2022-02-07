@@ -35,8 +35,6 @@
 
 #include "interaction.h"
 
-#include "geometry/quad.h"
-
 #include "geometry/triangle.h"
 
 #include "integrator.h"

@@ -7,11 +7,11 @@
 namespace pathTracer {
 	Vector3f DirectIntegrator::sample_li(Scene* scene, Ray* origin_ray)
 	{
-		auto* hitInteraction = new Interaction(origin_ray);
-		unsigned hitGeomID = scene->intersect(hitInteraction);
-		Geometry* hitGeometry = hitInteraction->geometry;
-		delete hitInteraction;
-		if (hitGeomID != 9) return { 0, 0, 0 };
+		//auto* hitInteraction = new Interaction(origin_ray);
+		//unsigned hitGeomID = scene->intersect(hitInteraction);
+		//Geometry* hitGeometry = hitInteraction->geometry;
+		//delete hitInteraction;
+		//if (hitGeomID != 8) return { 0, 0, 0 };
 
 		Interaction* p = new Interaction(origin_ray);
 		unsigned hitId = scene->intersect(p);

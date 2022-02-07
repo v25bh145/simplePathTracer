@@ -12,7 +12,7 @@ namespace pathTracer {
         //unsigned hitGeomID = scene->intersect(hitInteraction);
         //Geometry* hitGeometry = hitInteraction->geometry;
         //delete hitInteraction;
-        //if (hitGeomID != 5) return { 0, 0, 0 };
+        //if (hitGeomID != 17 && hitGeomID != 18) return { 0, 0, 0 };
         //else {
         //    Ray* wi = new Ray();
         //    float wi_pdf;
@@ -50,6 +50,7 @@ namespace pathTracer {
                 float t_pdf;
                 Vector3f tr;
                 float moveDistance = medium->sample_t(t_pdf, tr);
+                //cout << "预测移动的距离=" << moveDistance << ", 实际距离=" << distance << endl;
                 // sample t
                 if (moveDistance > distance) {
                     // hit the surface, use the hitInteraction
@@ -129,7 +130,7 @@ namespace pathTracer {
             }
             else {
                 // normal path tracer
-                ////cout << "estimateVolumeDirect(null)" << endl;
+                //cout << "estimateVolumeDirect(null)" << endl;
                 // if this is the first ray OR the last ray sampled has a type SPECULAR
                 if (bounce == 0 || isSpecular) {
                     // if the ray hit a geometry, add this geometry's emitLight
@@ -139,7 +140,7 @@ namespace pathTracer {
                                 hitGeometry->emitLight.y() * beta.y(),
                                 hitGeometry->emitLight.z() * beta.z()
                         };
-                        ////cout << "   自身光源*beta=" << vector3fToString(sum) << endl;
+                        //cout << "   自身光源*beta=" << vector3fToString(sum) << endl;
                         L += sum;
                     }
                     // if the ray don't hit any geometry, break this endless while
@@ -165,8 +166,8 @@ namespace pathTracer {
                         Ld.y() * beta.y(),
                         Ld.z() * beta.z()
                     };
-                    ////cout << "   直接光照=" << vector3fToString(Ld) << endl;
-                    ////cout << "   直接光照*beta=" << vector3fToString(mul) << endl;
+                    //cout << "   直接光照=" << vector3fToString(Ld) << endl;
+                    //cout << "   直接光照*beta=" << vector3fToString(mul) << endl;
                     L += mul;
                 }
                 // randomly choose a BxDF,
@@ -233,14 +234,12 @@ namespace pathTracer {
             bounce++;
             //cout << ray->toString() << endl;
             delete ray;
-            ray = new Ray(hitInteraction->p + wi->direction * 0.05f, wi->direction, 0);
+            ray = new Ray(hitInteraction->p + wi->direction * 0.0005f, wi->direction, 0);
             delete wi;
             delete hitInteraction;
         }
         //cout << "       L=" << vector3fToString(L) << endl;
         delete ray;
-
-        //cout << "           sum_L" << vector3fToString(sum_L) << endl;
         return L;
     }
     void VolumePathIntegrator::deepCopy(Integrator*& integrator)
@@ -263,7 +262,7 @@ namespace pathTracer {
         float light_area_pdf;
         Vector3f light_p = light->sample_point(light_area_pdf);
         Vector3f dir = (light_p - p1->p).normalized();
-        Vector3f p1_p = p1->p + dir * 0.05f;
+        Vector3f p1_p = p1->p + dir * 0.0005f;
         Ray* wi = new Ray(p1_p, light_p);
         Interaction* lightInteraction = new Interaction(wi);
         
@@ -284,7 +283,7 @@ namespace pathTracer {
 
         Vector3f p2light = lightInteraction->p - p1_p;
         float light_pdf;
-        Vector3f L_light = light->le(lightInteraction, light_pdf);
+        Vector3f L_light = light->le(p1, lightInteraction, light_pdf);
         if (vector3fEqualTo0(L_light)) {
             //cout << "L_light=0.f, 退出" << endl;
             delete wi;
@@ -322,6 +321,8 @@ namespace pathTracer {
         //cout << "costheta=" << abs(p1->ray->direction.dot(p2light.normalized())) << ", light_pdf=" << light_pdf << endl;
         // selectLightPDF = 1 / lightsNum
         L *= scene->aggregation->lights.size();
+        // TODO: 数值修正-10倍
+        L *= 10.f;
         delete wi;
         delete lightInteraction;
         return L;
@@ -356,7 +357,7 @@ namespace pathTracer {
                 //cout << "time=" << time << ", nowTr=" << vector3fToString(nowTr) << endl;
                 Tr = { Tr.x() * nowTr.x(), Tr.y() * nowTr.y(), Tr.z() * nowTr.z() };
             }
-            sumDistance += time + 0.05f;
+            sumDistance += time + 0.0005f;
             //cout << "距离=" << time << "已走距离=" << sumDistance << endl;
             nowMedium = sameSideMedium(nowInteraction);
             //if (nowMedium != nullptr)
@@ -368,7 +369,7 @@ namespace pathTracer {
                 delete nowInteraction;
                 return { 0, 0, 0 };
             }
-            now_p = nowInteraction->p + 0.05f * nowRay->direction;
+            now_p = nowInteraction->p + 0.0005f * nowRay->direction;
             nowHitGeomId = nowInteraction->geometry->getRTCInnerGeometryId();
             if (nowHitGeomId == light->getRTCInnerGeometryId()) lightInteraction->normal = nowInteraction->normal;
             delete nowRay;

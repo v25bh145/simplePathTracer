@@ -15,24 +15,27 @@ namespace pathTracer {
 		// bilerp interpolation
 		return point;
 	}
-	Vector3f Triangle::le(Interaction* p, float& pdf)
+	Vector3f Triangle::le(Interaction* p1, Interaction* pLight, float& wi_pdf)
 	{
-		Vector3f p2light = p->p - p->ray->origin;
-		cout << "light> p=" << vector3fToString(p->p) << endl;
-		cout << "light> light_point=" << vector3fToString(p->ray->origin) << endl;
-		cout << "light> p2light=" << vector3fToString(p2light) << endl;
-		cout << "light> p2light(normalized)=" << vector3fToString(p2light.normalized()) << endl;
+		// wi_pdf = A_pdf * d * d / cos
+		Vector3f p2light = pLight->p - p1->p;
+		//cout << "light> light_point=" << vector3fToString(pLight->p) << endl;
+		//cout << "light> p=" << vector3fToString(p1->p) << endl;
+		//cout << "light> p2light=" << vector3fToString(p2light) << endl;
+		//cout << "light> p2light(normalized)=" << vector3fToString(p2light.normalized()) << endl;
 		if (singleSide && p2light.dot(outsideNormal) > 0) {
-			pdf = 0;
+			wi_pdf = 0;
 			return { 0, 0, 0 };
 		}
 		float dir = p2light.norm();
-		cout << "light> dir=" << dir << endl;
-		float abscostheta = abs(p->normal.dot(p2light.normalized()));
-		cout << "light> pNormal=" << vector3fToString(p->normal) << endl;
-		pdf = dir * dir / (abscostheta * area());
-		cout << "light> abscostheta=" << abscostheta << endl;
-		cout << "light> area=" << area() << endl;
+		//cout << "light> p2light(dir)=" << dir << endl;
+		float abscostheta = abs(pLight->normal.dot(p2light.normalized()));
+		//cout << "light> lightNormal=" << vector3fToString(pLight->normal) << endl;
+		//cout << "light> abscostheta=" << abscostheta << endl;
+		//cout << "light> area=" << area() << endl;
+		//wi_pdf = dir * dir / (area() * abscostheta);
+		wi_pdf = dir * dir / (area() * abscostheta);
+		//cout << "light> wi_pdf=" << wi_pdf << endl;
 		return emitLight;
 	}
 	float Triangle::area()

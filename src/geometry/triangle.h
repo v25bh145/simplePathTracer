@@ -11,7 +11,8 @@ namespace pathTracer {
     class Triangle : public Geometry {
     public:
         // default will not create new RTCInnerGeometry
-        Triangle() {}
+        Triangle() {
+        }
         Triangle(Vector3f p1, Vector3f p2, Vector3f p3, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false, Medium* outsideMedium = nullptr, Medium* insideMedium = nullptr)
             :p1(p1), p2(p2), p3(p3)
             , outsideNormal(outsideNormal.normalized()), singleSide(singleSide)
@@ -63,7 +64,7 @@ namespace pathTracer {
         Geometry* hasSubGeometriesId(unsigned int id) override;
 
         Vector3f sample_point(float& pdf) override;
-        Vector3f le(Interaction* p, float& pdf) override;
+        Vector3f le(Interaction* p1, Interaction* pLight, float& wi_pdf) override;
 
         float area() override;
 
@@ -79,6 +80,9 @@ namespace pathTracer {
 
         Medium* getOutsideMedium() override;
         Medium* getInsideMedium() override;
+
+        // TODO
+        //void attachTexture(Texture* texture, vector<float,float> uvArray);
 
         string toString() override;
     };

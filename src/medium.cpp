@@ -17,7 +17,10 @@ namespace pathTracer {
 		float sigma_t_channal = sigma_t_array[channal];
 		float u = randomGenerator.uniform0To1();
 		if (u == 1.f || u == 0.f) u = 0.5f;
-		float moveDistance = -log(1 - u) / sigma_t_channal;
+		float moveDistance = -log(1.f - u) / sigma_t_channal;
+		//cout << "1-u=" << 1.f - u << endl;
+		//cout << "channal=" << sigma_t_channal << endl;
+		//cout << "moveDistance=" << moveDistance << endl;
 		tr = this->tr(moveDistance);
 		p_t = (sigma_t.x() * exp(-sigma_t.x() * moveDistance)
 			+ sigma_t.y() * exp(-sigma_t.y() * moveDistance)

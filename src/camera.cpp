@@ -3,7 +3,7 @@
 //
 
 #include "camera.h"
-#define THREAD_N 1
+#define THREAD_N 16
 
 namespace pathTracer {
     DWORD WINAPI generateByThread(LPVOID lpParameter) {
@@ -24,8 +24,6 @@ namespace pathTracer {
                 for (auto ray : ray_N) {
                     Vector3f color = camera->integrator->sample_li(camera->scene, ray);
                     // TODO [correction: numerical error]
-                    //if (color.x() < 256.f && color.y() < 256.f && color.z() < 256.f)
-                    //    color *= 30.f;
                     color_N += color;
                     delete ray;
                 }
@@ -66,7 +64,7 @@ namespace pathTracer {
                 yHigh = imageFragment[i]->heightRange.second;
             for (int x = xLow; x < xHigh; ++x) {
                 for (int y = yLow; y < yHigh; ++y) {
-                    Vector3f color = imageFragment[i]->pixels[x - xLow][y - yLow];
+                    Vector3f color = imageFragment[i]->pixels[x - xLow][y - yLow] * 255.f;
                     pixels[resolution.x() - x - 1][resolution.y() - y - 1] = color;
                 }
             }

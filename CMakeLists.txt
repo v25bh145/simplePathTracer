@@ -45,8 +45,6 @@ set(
         ${PROJECT_SOURCE_DIR}/src/camera.h
         ${PROJECT_SOURCE_DIR}/src/interaction.cpp
         ${PROJECT_SOURCE_DIR}/src/interaction.h
-        ${PROJECT_SOURCE_DIR}/src/geometry/quad.cpp
-        ${PROJECT_SOURCE_DIR}/src/geometry/quad.h
         ${PROJECT_SOURCE_DIR}/src/geometry/triangle.cpp
         ${PROJECT_SOURCE_DIR}/src/geometry/triangle.h
         ${PROJECT_SOURCE_DIR}/src/integrator.cpp
