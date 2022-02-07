@@ -2,7 +2,6 @@
 // Created by v25bh on 2021/12/20.
 //
 #include "medium.h"
-#include "geometry/quad.h"
 
 namespace pathTracer {
 	float Medium::p_surf(float tMax)

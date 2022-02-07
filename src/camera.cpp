@@ -23,15 +23,24 @@ namespace pathTracer {
                 Vector3f color_N = { 0.f, 0.f, 0.f };
                 for (auto ray : ray_N) {
                     Vector3f color = camera->integrator->sample_li(camera->scene, ray);
-                    // TODO [correction: numerical error]
                     color_N += color;
+                    //if (color.x() > 0.f) { 
+                    //    cout << "!x=" << x << ", !y=" << y << ", !color=" << vector3fToString(color) << endl; 
+                    //    cout << ray->toString() << endl;
+                    //}
                     delete ray;
                 }
                 imageFragment->pixels[x - xLow][y - yLow] = color_N / ray_N.size();
-                //Ray* ray = camera->sample_wi(x_pixel, y_pixel);
-                //Vector3f pixel = camera->integrator->sample_li(camera->scene, ray);
-                //imageFragment->pixels[x - xLow][y - yLow] = pixel;
-                //delete ray;
+                
+                // normal
+                //Vector3f color_N = { 0, 0, 0 };
+                //for (int i = 0; i < camera->sampleOnePixel; ++i) {
+                //    Ray* ray = camera->sample_wi(x_pixel, y_pixel);
+                //    Vector3f color = camera->integrator->sample_li(camera->scene, ray);
+                //    color_N += color;
+                //    delete ray;
+                //}
+                //imageFragment->pixels[x - xLow][y - yLow] = color_N / camera->sampleOnePixel;
             }
         }
         return 0;
@@ -148,6 +157,8 @@ namespace pathTracer {
     }
     vector<Ray*> Camera::sample_wi_LHS(float x_center, float y_center)
     {
+        //cout << "(xCenter, yCenter)=(" << x_center << ", " << x_center << ")" << endl;
+        //cout << "pixelsize=" << pixelSize << ", sampleOnePixel=" << sampleOnePixel << endl;
         RandomGenerator randomGenerator;
         vector<Ray*> ray_N;
         Vector2f upperLeft = { x_center - pixelSize.x() / 2, y_center - pixelSize.y() / 2 };
@@ -159,7 +170,7 @@ namespace pathTracer {
         for (int i = 0; i < sampleOnePixel; ++i) {
             float x = upperLeft.x() + ((float)i + u2D[i].x()) * stride.x();
             float y = upperLeft.y() + ((float)shuffleArray[i] + u2D[i].y()) * stride.y();
-            //cout << "(x, y)=(" << x << ", " << y << ")" << endl;
+            //cout << "   (x, y)=(" << x << ", " << y << ")" << endl;
             ray_N.push_back(sample_wi(x, y));
         }
         return ray_N;

@@ -51,4 +51,6 @@
 
 #include "integrator/volumePathIntegrator.h"
 
+#include "texture.h"
+
 #endif

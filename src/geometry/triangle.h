@@ -12,6 +12,9 @@ namespace pathTracer {
     public:
         // default will not create new RTCInnerGeometry
         Triangle() {
+            RTCInnerGeometry = nullptr;
+            outsideMedium = nullptr;
+            insideMedium = nullptr;
         }
         Triangle(Vector3f p1, Vector3f p2, Vector3f p3, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false, Medium* outsideMedium = nullptr, Medium* insideMedium = nullptr)
             :p1(p1), p2(p2), p3(p3)
@@ -20,6 +23,7 @@ namespace pathTracer {
             if (vector3fEqualTo0(outsideNormal)) {
                 // ccw
                 
+                // input the normal from parameter
                 //if (bxdf != nullptr && bxdf->hasType(BxDFType::TRANSMISSION)) {
                 //    cout << "must set the outsideNormal when having set TRANSMISSION bxdf" << endl;
                 //    assert(false);
@@ -40,19 +44,17 @@ namespace pathTracer {
             vertices[0] = p1.x(); vertices[1] = p1.y(); vertices[2] = p1.z();
             vertices[3] = p2.x(); vertices[4] = p2.y(); vertices[5] = p2.z();
             vertices[6] = p3.x(); vertices[7] = p3.y(); vertices[8] = p3.z();
-            unsigned* indices = (unsigned*)rtcSetNewGeometryBuffer(*RTCInnerGeometry, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, 3 * sizeof(unsigned), 1);
+            unsigned*  indices = (unsigned*)rtcSetNewGeometryBuffer(*RTCInnerGeometry, RTC_BUFFER_TYPE_INDEX, 0, RTC_FORMAT_UINT3, 3 * sizeof(unsigned), 1);
             indices[0] = 0; indices[1] = 1; indices[2] = 2;
             rtcCommitGeometry(*RTCInnerGeometry);
-            cout << "id=" << this->RTCInnerGeometryId << endl;
-            if (this->insideMedium)
-                cout << "insideMedium" << this->insideMedium->toString() << endl;
-            if (this->outsideMedium)
-                cout << "outsideMedium" << this->outsideMedium->toString() << endl;
+            //cout << "id=" << this->RTCInnerGeometryId << endl;
+            //if (this->insideMedium)
+            //    cout << "insideMedium" << this->insideMedium->toString() << endl;
+            //if (this->outsideMedium)
+            //    cout << "outsideMedium" << this->outsideMedium->toString() << endl;
         }
         RTCGeometry* RTCInnerGeometry;
         unsigned RTCInnerGeometryId;
-        float* vertices;
-        unsigned* indices;
         Vector3f p1, p2, p3;
 
         Vector3f outsideNormal;
@@ -82,7 +84,7 @@ namespace pathTracer {
         Medium* getInsideMedium() override;
 
         // TODO
-        //void attachTexture(Texture* texture, vector<float,float> uvArray);
+        //void attachTexture(Texture2D* texture, vector<float,float> uvArray);
 
         string toString() override;
     };

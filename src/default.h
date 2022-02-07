@@ -24,6 +24,8 @@ using namespace Eigen;
 // pixels 2 PNG
 //#include "../extensions/libpng/include/png.h"
 #include <png.h>
+// stb
+#include "../ext/stb_image.h"
 
 namespace pathTracer {
     const RTCDevice DEVICE = rtcNewDevice(NULL);

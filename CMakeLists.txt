@@ -66,6 +66,8 @@ set(
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/orenNayer.cpp
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/microfacet.h
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/microfacet.cpp
+        ${PROJECT_SOURCE_DIR}/src/texture.cpp
+        ${PROJECT_SOURCE_DIR}/src/texture.h
 )
 
 set (

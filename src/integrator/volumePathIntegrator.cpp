@@ -11,8 +11,8 @@ namespace pathTracer {
         //auto* hitInteraction = new Interaction(origin_ray);
         //unsigned hitGeomID = scene->intersect(hitInteraction);
         //Geometry* hitGeometry = hitInteraction->geometry;
+        //if (hitGeomID != 3 && hitGeomID != 4) return { 0, 0, 0 };
         //delete hitInteraction;
-        //if (hitGeomID != 17 && hitGeomID != 18) return { 0, 0, 0 };
         //else {
         //    Ray* wi = new Ray();
         //    float wi_pdf;
