@@ -14,8 +14,15 @@ include_directories(
         ${EIGEN3_INCLUDE_DIRS}
 )
 
+set (
+    EXTFILES
+    ${PROJECT_SOURCE_DIR}/ext/stb_image.h
+    ${PROJECT_SOURCE_DIR}/ext/stb_image.cpp
+)
+
 set(
         SRCFILES
+        ${EXTFILES}
         ${PROJECT_SOURCE_DIR}/src/default.h
         ${PROJECT_SOURCE_DIR}/src/pngParser.cpp
         ${PROJECT_SOURCE_DIR}/src/pngParser.h

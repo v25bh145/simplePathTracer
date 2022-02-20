@@ -129,17 +129,26 @@ int main(int argc, char** argv) {
     aggregation->push_back(tall_block_52);
     scene->commit();
 
+    Texture2D* texture = new Texture2D("../../../../assets/bricks2.jpg", BORDER_STRATEGY::BLACK, BORDER_STRATEGY::BLACK);
+    floor1->attachTexture(texture, { {1.f, 0.f}, {0.f, 0.f}, {0.f, 1.f} });
+
+    Ray* ray = new Ray({0.1, 0.5, -1}, {0, 0, 1}, 0);
+    Interaction* p = new Interaction(ray);
+    unsigned hitId = scene->intersect(p);
+    if (hitId > 0) {
+        Geometry* hitGeometry = p->geometry;
+        cout << "hitID=" << hitId << endl;
+        cout << "u=" << p->u << ", v=" << p->v << endl;
+        return 0;
+    }
+
+    //auto* floor1 = new Triangle({ 1.f, 0, 0 }, { 0, 0, 0 }, { 0, 1.f, 0 }, white_diffuse, { 0, 0, 0 });
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
     // Ray information: origin (x=-0.533653, y=-16, z=6.04339), dir (x=0.357406, y=0.862869, z=-0.357377), tMin=9.2714, tMax=241.056
-    //Ray* ray = new Ray({ 0.533653f, -16.f, 6.04339f }, { 0.357406f ,0.862869f, -0.357377f }, 0.f, 9.2714f, 241.056f);
-    //auto* hitInteraction = new Interaction(ray);
-    //unsigned hitGeomID = scene->intersect(hitInteraction);
-    //Geometry* hitGeometry = hitInteraction->geometry;
-    //cout <<"hitID=" << hitGeomID << endl;
 
-    VolumePathIntegrator* integrator = new VolumePathIntegrator(5);
+    //VolumePathIntegrator* integrator = new VolumePathIntegrator(5);
     //PathIntegrator* integrator = new PathIntegrator(5);
-    //DirectIntegrator* integrator = new DirectIntegrator();
+    DirectIntegrator* integrator = new DirectIntegrator();
 
     Vector3f cameraOrigin = { 0.5f, -1.45f, 0.5f };
     Vector3f cameraLookingAt = { 0, 1, 0 };

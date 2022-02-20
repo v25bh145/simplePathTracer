@@ -41,15 +41,19 @@ namespace pathTracer {
             interaction->normal.normalize();
             interaction->normalShading.normalize();
 
-            interaction->u = rayHit.hit.u; interaction->v = rayHit.hit.v;
+            interaction->RTCu = rayHit.hit.u; interaction->RTCv = rayHit.hit.v;
+
             interaction->time = rayHit.ray.tfar;
             interaction->p = {
                     rayHit.ray.org_x + rayHit.ray.dir_x * rayHit.ray.tfar,
                     rayHit.ray.org_y + rayHit.ray.dir_y * rayHit.ray.tfar,
                     rayHit.ray.org_z + rayHit.ray.dir_z * rayHit.ray.tfar,
             };
-            if (rayHit.hit.geomID > 0)
+            if (rayHit.hit.geomID > 0) {
                 interaction->geometry = aggregation->findGeometryById(rayHit.hit.geomID);
+                Vector2f UV = interaction->geometry->getUV(interaction->p);
+                interaction->u = UV.x(); interaction->v = UV.y();
+            }
             else
                 interaction->geometry = nullptr;
             //cout<<"Hit the geometry which id is: "<<rayHit.hit.geomID<<endl;

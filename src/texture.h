@@ -2,6 +2,7 @@
 #define SIMPLEPATHTRACER_TEXTURE_H
 
 #include "default.h"
+#include "mathHelper.h"
 
 namespace pathTracer {
     enum IMAGEFORMAT { RED = 0b1, RGB = 0b10, RGBA = 0b100};

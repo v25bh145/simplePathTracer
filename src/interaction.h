@@ -23,12 +23,16 @@ namespace pathTracer{
         Interaction(Ray *ray):ray(ray) {};
         Geometry *geometry;
         Ray *ray;
+        //Ray *rayDifferential;
         Vector3f p;
         Vector3f normal;
         Vector3f normalShading;
         float time;
         float u;
         float v;
+        // RTCu & RTCv are not the coordinate in texture, but parameters in RTC inner core
+        float RTCu;
+        float RTCv;
         float dudp;
         float dvdp;
         float du2dp;

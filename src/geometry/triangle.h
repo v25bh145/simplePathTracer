@@ -83,8 +83,10 @@ namespace pathTracer {
         Medium* getOutsideMedium() override;
         Medium* getInsideMedium() override;
 
-        // TODO
-        //void attachTexture(Texture2D* texture, vector<float,float> uvArray);
+        // uvArray: according to the index of vertices(p1, p2, p3)
+        Vector2f p1UV, p2UV, p3UV;
+        void attachTexture(Texture2D* texture, vector<Vector2f> uvArray) override;
+        Vector2f getUV(Vector3f p) override;
 
         string toString() override;
     };

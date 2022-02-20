@@ -13,6 +13,7 @@ namespace pathTracer {
     string vector3fToString(Vector3f v);
     Vector3f sameSide(Vector3f n, Vector3f w);
     bool vector3fEqualTo0(Vector3f vector3f);
+    float triangleArea(Vector3f p1, Vector3f p2, Vector3f p3);
 }
 
 

@@ -2,7 +2,8 @@
 // Created by v25bh on 2021/12/2.
 //
 #include <iostream>
-#include "../../src/sampling.h"
+//#include "../../src/sampling.h"
+#include "../../src/pathTracer.h"
 
 using namespace std;
 using namespace pathTracer;
@@ -25,4 +26,5 @@ int main(int argc, char** argv) {
     for (int i = 0; i < arr.size(); ++i) {
         cout << arr[i] + 1 << endl;
     }
+
 }

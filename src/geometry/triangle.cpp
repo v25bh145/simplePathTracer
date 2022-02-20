@@ -40,11 +40,7 @@ namespace pathTracer {
 	}
 	float Triangle::area()
 	{
-		float e1 = (p1 - p2).norm(),
-			e2 = (p2 - p3).norm(),
-			e3 = (p1 - p3).norm();
-		float pt = (e1 + e2 + e3) / 2.f;
-		return sqrt(pt * (pt - e1) * (pt - e2) * (pt - e3));
+		return triangleArea(p1, p2, p3);
 	}
 	void Triangle::loadRealGeometryFlush()
 	{
@@ -94,6 +90,28 @@ namespace pathTracer {
 	Medium* Triangle::getInsideMedium()
 	{
 		return this->insideMedium;
+	}
+	void Triangle::attachTexture(Texture2D* texture, vector<Vector2f> uvArray)
+	{
+		if (uvArray.size() < 3) {
+			cout << "error: texture UV input format is wrong!" << endl;
+		}
+		this->texture = texture;
+		p1UV = { uvArray[0].x(), uvArray[0].y() };
+		p2UV = { uvArray[1].x(), uvArray[1].y() };
+		p3UV = { uvArray[2].x(), uvArray[2].y() };
+	}
+	Vector2f Triangle::getUV(Vector3f p)
+	{
+		if (texture == nullptr) return { 0.f, 0.f };
+		Vector3f barycentric;
+		float areaP1P2P3 = this->area();
+		float areaPP1P2 = triangleArea(p, p1, p2);
+		float areaPP2P3 = triangleArea(p, p2, p3);
+		barycentric.x() = areaPP2P3 / areaP1P2P3;
+		barycentric.z() = areaPP1P2 / areaP1P2P3;
+		barycentric.y() = 1.f - barycentric.x() - barycentric.z();
+		return barycentric.x() * p1UV + barycentric.y() * p2UV + barycentric.z() * p3UV;
 	}
 	string Triangle::toString()
 	{

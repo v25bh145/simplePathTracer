@@ -12,6 +12,7 @@
 #include "bxdf.h"
 #include "sampling.h"
 #include "medium.h"
+#include "texture.h"
 
 namespace pathTracer {
 
@@ -36,31 +37,33 @@ namespace pathTracer {
         static unsigned RTCInnerObjNumber;
 
         //Geometry(BxDF* bxdf, Vector3f emitLight = {0, 0, 0}):bxdf(bxdf), emitLight(emitLight) {}
-        Geometry(BxDF* bxdf, Vector3f emitLight = { 0, 0, 0 })
-            :bxdf(bxdf), emitLight(emitLight){}
+        Geometry(BxDF* bxdf, Vector3f emitLight = { 0, 0, 0 }, Texture2D* texture = nullptr)
+            :bxdf(bxdf), emitLight(emitLight), texture(texture) {}
         Geometry() {
             bxdf = nullptr;
         };
-
+        // light(for sampling)
         virtual Vector3f sample_point(float& pdf) = 0;
         virtual Vector3f le(Interaction* p1, Interaction* pLight, float& wi_pdf) = 0;
-
         virtual float area() = 0;
-
+        // base class
         virtual Geometry* hasSubGeometriesId(unsigned id) = 0;
+        // RTC core
         virtual void attachAllGeometriesToScene(Scene scene) = 0;
-
         virtual void loadRealGeometryFlush() = 0;
-
         virtual unsigned getRTCInnerGeometryId() = 0;
         virtual RTCGeometry* getRTCInnerGeometry() = 0;
-
+        // light & medium
         virtual Vector3f getOutsideNormal() = 0;
+        // medium(geometry's child class which can't implement this will return nullptr)
         virtual Medium* getOutsideMedium() = 0;
         virtual Medium* getInsideMedium() = 0;
-
+        // texture
+        Texture2D* texture;
+        virtual void attachTexture(Texture2D* texture, vector<Vector2f> uvArray) = 0;
+        virtual Vector2f getUV(Vector3f p) = 0;
+        // object
         virtual void deepCopy(Geometry*& geometry) = 0;
-
         virtual string toString() = 0;
     };
 
