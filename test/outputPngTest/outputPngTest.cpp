@@ -13,7 +13,7 @@ using namespace pathTracer;
 int main(int argc, char** argv) {
     cout << "outputPngTest.cpp" << endl;
     // mapping test
-    Texture2D texture("../../../../assets/lisa.jpg", BORDER_STRATEGY::BLACK, BORDER_STRATEGY::BLACK);
+    Texture2D texture("../../../../assets/bricks2.jpg", BORDER_STRATEGY::BLACK, BORDER_STRATEGY::BLACK);
     //texture.width = 512.f;
     //texture.height = 512.f;
     //texture.nrComponents = 3;

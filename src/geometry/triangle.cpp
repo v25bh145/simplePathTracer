@@ -81,6 +81,11 @@ namespace pathTracer {
 			this->insideMedium->deepCopy(triangle->insideMedium);
 		if (outsideMedium != nullptr)
 			this->outsideMedium->deepCopy(triangle->outsideMedium);
+		if (texture != nullptr)
+			this->texture->deepCopy(triangle->texture);
+		triangle->p1UV = this->p1UV;
+		triangle->p2UV = this->p2UV;
+		triangle->p3UV = this->p3UV;
 	}
 	Medium* Triangle::getOutsideMedium()
 	{
@@ -95,11 +100,12 @@ namespace pathTracer {
 	{
 		if (uvArray.size() < 3) {
 			cout << "error: texture UV input format is wrong!" << endl;
+			assert(false);
 		}
 		this->texture = texture;
-		p1UV = { uvArray[0].x(), uvArray[0].y() };
-		p2UV = { uvArray[1].x(), uvArray[1].y() };
-		p3UV = { uvArray[2].x(), uvArray[2].y() };
+		p1UV = uvArray[0];
+		p2UV = uvArray[1];
+		p3UV = uvArray[2];
 	}
 	Vector2f Triangle::getUV(Vector3f p)
 	{
@@ -111,7 +117,15 @@ namespace pathTracer {
 		barycentric.x() = areaPP2P3 / areaP1P2P3;
 		barycentric.z() = areaPP1P2 / areaP1P2P3;
 		barycentric.y() = 1.f - barycentric.x() - barycentric.z();
+		//cout << "bc " << vector3fToString(barycentric) << endl;
+		//cout << "p1UV " << vector2fToString(p1UV) << endl;
+		//cout << "p2UV " << vector2fToString(p2UV) << endl;
+		//cout << "p3UV " << vector2fToString(p3UV) << endl;
 		return barycentric.x() * p1UV + barycentric.y() * p2UV + barycentric.z() * p3UV;
+	}
+	Texture2D* Triangle::getTexture()
+	{
+		return texture;
 	}
 	string Triangle::toString()
 	{

@@ -32,11 +32,12 @@ namespace pathTracer {
             else if (nrComponents == 4)
                 format = IMAGEFORMAT::RGBA;
         };
-        ~Texture2D() {
-            cout << "delete texture2D" << endl;
-            stbi_image_free(data);
-        }
-        Vector4f mapping(Vector2f uv, Vector2f pixelSize);
+        //~Texture2D() {
+        //    cout << "delete texture2D" << endl;
+        //    stbi_image_free(data);
+        //}
+        void deepCopy(Texture2D*& texture2D);
+        Vector4f mapping(Vector2f uv, float pixelSize);
 	};
 };
 #endif

@@ -32,7 +32,7 @@ namespace pathTracer {
         float height;
         float width;
         float aspect;
-        Vector2f pixelSize;
+        float pixelSize;
         Vector3f XAxle;
         Vector3f filmOrigin;
         Vector3f filmA;
@@ -61,8 +61,10 @@ namespace pathTracer {
             filmC = filmOrigin - height * upAngle / 2 - width * XAxle / 2;
             filmD = filmOrigin - height * upAngle / 2 + width * XAxle / 2;
 
-            pixelSize.x() = width / resolution.y();
-            pixelSize.y() = height / resolution.x();
+            // pixelSize = width / resolution.x() = height / resolution.y();
+            pixelSize = width / resolution.x();
+            if(this->integrator != nullptr)
+                this->integrator->setPixelSize(this->pixelSize);
         };
 
         Ray *sample_wi(float x, float y);

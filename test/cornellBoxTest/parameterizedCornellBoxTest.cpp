@@ -129,18 +129,19 @@ int main(int argc, char** argv) {
     aggregation->push_back(tall_block_52);
     scene->commit();
 
-    Texture2D* texture = new Texture2D("../../../../assets/bricks2.jpg", BORDER_STRATEGY::BLACK, BORDER_STRATEGY::BLACK);
-    floor1->attachTexture(texture, { {1.f, 0.f}, {0.f, 0.f}, {0.f, 1.f} });
+    Texture2D* bricksTexture = new Texture2D("../../../../assets/bricks2.jpg", BORDER_STRATEGY::BLACK, BORDER_STRATEGY::BLACK);
+    floor1->attachTexture(bricksTexture, { {1.f, 0.f}, {0.f, 0.f}, {0.f, 1.f} });
+    floor2->attachTexture(bricksTexture, { {1.f, 0.f}, {0.f, 1.f}, {1.f, 1.f} });
 
-    Ray* ray = new Ray({0.1, 0.5, -1}, {0, 0, 1}, 0);
-    Interaction* p = new Interaction(ray);
-    unsigned hitId = scene->intersect(p);
-    if (hitId > 0) {
-        Geometry* hitGeometry = p->geometry;
-        cout << "hitID=" << hitId << endl;
-        cout << "u=" << p->u << ", v=" << p->v << endl;
-        return 0;
-    }
+    //Ray* ray = new Ray({0.1, 0.5, -1}, {0, 0, 1}, 0);
+    //Interaction* p = new Interaction(ray);
+    //unsigned hitId = scene->intersect(p);
+    //if (hitId > 0) {
+    //    Geometry* hitGeometry = p->geometry;
+    //    cout << "hitID=" << hitId << endl;
+    //    cout << "u=" << p->u << ", v=" << p->v << endl;
+    //    return 0;
+    //}
 
     //auto* floor1 = new Triangle({ 1.f, 0, 0 }, { 0, 0, 0 }, { 0, 1.f, 0 }, white_diffuse, { 0, 0, 0 });
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
@@ -153,8 +154,8 @@ int main(int argc, char** argv) {
     Vector3f cameraOrigin = { 0.5f, -1.45f, 0.5f };
     Vector3f cameraLookingAt = { 0, 1, 0 };
     Vector3f cameraUpAngle = { 0, 0, 1 };
-    Vector2i resolution = { 256, 256 };
-    auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 1.45f, PI / 4, 0, 200.f, scene, resolution, integrator, 20);
+    Vector2i resolution = { 256, 512 };
+    auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 1.45f, PI * 7 / 18, 0, 200.f, scene, resolution, integrator, 20);
     cout << camera->toString() << endl;
     cout << "begin generating" << endl;
     camera->generate();

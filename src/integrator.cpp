@@ -88,4 +88,8 @@ namespace pathTracer {
 		delete lightShadowInteraction;
 		return L;
 	}
+	void Integrator::setPixelSize(float pixelSize)
+	{
+		this->pixelSize = pixelSize;
+	}
 }

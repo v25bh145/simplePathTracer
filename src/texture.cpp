@@ -1,6 +1,17 @@
 #include "texture.h"
 namespace pathTracer {
-	Vector4f Texture2D::mapping(Vector2f uv, Vector2f pixelSize)
+	void Texture2D::deepCopy(Texture2D*& texture2D)
+	{
+		texture2D = new Texture2D();
+		texture2D->data = this->data;
+		texture2D->format = this->format;
+		texture2D->height = this->height;
+		texture2D->width = this->width;
+		texture2D->SAxisBorderStrategy = this->SAxisBorderStrategy;
+		texture2D->TAxisBorderStrategy = this->TAxisBorderStrategy;
+		texture2D->nrComponents = this->nrComponents;
+	}
+	Vector4f Texture2D::mapping(Vector2f uv, float pixelSize)
 	{
 		float u = uv.x() * width;
 		float v = uv.y() * height;
@@ -43,11 +54,14 @@ namespace pathTracer {
 			}
 		}
 		int uInt, vInt;
+		cout << "pixelSize=" << pixelSize << endl;
 		//if(pixelSize.x() > 1)
 
 		// no MIPMap
 		uInt = round(u); vInt = round(v);
-		cout << "uInt=" << uInt << ", vInt=" << vInt << endl;
+		uInt = clampi(uInt, 0, width - 1);
+		vInt = clampi(vInt, 0, height - 1);
+		//cout << "uInt=" << uInt << ", vInt=" << vInt << endl;
 		int index = (uInt * width + vInt) * nrComponents;
 		Vector4f color = { 0.f, 0.f, 0.f, 0.f };
 		if (nrComponents == 1)
@@ -57,6 +71,7 @@ namespace pathTracer {
 		else if (nrComponents == 4)
 			color = { (float)data[index], (float)data[index + 1], (float)data[index + 2], (float)data[index + 3] };
 		//cout << vector3fToString({color.x(), color.y(), color.z()}) << endl;
+		color /= 255.f;
 		return color;
 	}
 }

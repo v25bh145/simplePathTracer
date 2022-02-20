@@ -19,11 +19,20 @@ namespace pathTracer{
 
     class Interaction {
     public:
-        Interaction() {};
-        Interaction(Ray *ray):ray(ray) {};
+        Interaction() {
+            geometry = nullptr;
+            ray = nullptr;
+            rayDifferential = nullptr;
+            pixelSizeProjected = 0.f;
+        };
+        Interaction(Ray *ray):ray(ray) {
+            rayDifferential = nullptr;
+            geometry = nullptr;
+            pixelSizeProjected = 0.f;
+        };
         Geometry *geometry;
         Ray *ray;
-        //Ray *rayDifferential;
+        Ray *rayDifferential;
         Vector3f p;
         Vector3f normal;
         Vector3f normalShading;
@@ -33,12 +42,18 @@ namespace pathTracer{
         // RTCu & RTCv are not the coordinate in texture, but parameters in RTC inner core
         float RTCu;
         float RTCv;
+        //TODO
+        // 投影过去之后像素不再是正方形，甚至两边不再是直角，所以要创建两个微分光线，一个右边像素一个下边像素
+        //Vector2f pixelSizeProjected;
+        float pixelSizeProjected;
         float dudp;
         float dvdp;
         float du2dp;
         float dv2dp;
         float dndp;
         //BxDF *bxdf;
+        void genRayDifferential(float pixelSize);
+        void deleteRayDifferential();
         string toString();
     };
 }

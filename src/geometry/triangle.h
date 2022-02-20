@@ -15,6 +15,7 @@ namespace pathTracer {
             RTCInnerGeometry = nullptr;
             outsideMedium = nullptr;
             insideMedium = nullptr;
+            texture = nullptr;
         }
         Triangle(Vector3f p1, Vector3f p2, Vector3f p3, BxDF* bxdf, Vector3f emitLight, Vector3f outsideNormal = { 0, 0, 0 }, bool singleSide = false, Medium* outsideMedium = nullptr, Medium* insideMedium = nullptr)
             :p1(p1), p2(p2), p3(p3)
@@ -52,6 +53,7 @@ namespace pathTracer {
             //    cout << "insideMedium" << this->insideMedium->toString() << endl;
             //if (this->outsideMedium)
             //    cout << "outsideMedium" << this->outsideMedium->toString() << endl;
+            texture = nullptr;
         }
         RTCGeometry* RTCInnerGeometry;
         unsigned RTCInnerGeometryId;
@@ -87,6 +89,8 @@ namespace pathTracer {
         Vector2f p1UV, p2UV, p3UV;
         void attachTexture(Texture2D* texture, vector<Vector2f> uvArray) override;
         Vector2f getUV(Vector3f p) override;
+        Texture2D* texture;
+        Texture2D* getTexture() override;
 
         string toString() override;
     };

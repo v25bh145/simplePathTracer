@@ -3,7 +3,7 @@
 //
 
 #include "camera.h"
-#define THREAD_N 16
+#define THREAD_N 1
 
 namespace pathTracer {
     DWORD WINAPI generateByThread(LPVOID lpParameter) {
@@ -13,11 +13,11 @@ namespace pathTracer {
             xHigh = imageFragment->widthRange.second,
             yLow = imageFragment->heightRange.first,
             yHigh = imageFragment->heightRange.second;
-        Vector2f pixelSize = imageFragment->camera->pixelSize;
+        float pixelSize = imageFragment->camera->pixelSize;
         for (int x = xLow; x < xHigh; ++x) {
             for (int y = yLow; y < yHigh; ++y) {
-                float x_pixel = x + pixelSize.x() / 2;
-                float y_pixel = y + pixelSize.y() / 2;
+                float x_pixel = x + pixelSize / 2;
+                float y_pixel = y + pixelSize / 2;
                 // LHS
                 vector<Ray*> ray_N = camera->sample_wi_LHS(x_pixel, y_pixel);
                 Vector3f color_N = { 0.f, 0.f, 0.f };
@@ -31,7 +31,7 @@ namespace pathTracer {
                     delete ray;
                 }
                 imageFragment->pixels[x - xLow][y - yLow] = color_N / ray_N.size();
-                
+
                 // normal
                 //Vector3f color_N = { 0, 0, 0 };
                 //for (int i = 0; i < camera->sampleOnePixel; ++i) {
@@ -129,7 +129,7 @@ namespace pathTracer {
         buffer << "filmB = (" << filmB.x() << ", " << filmB.y() << ", " << filmB.z() << ")" << endl;
         buffer << "filmC = (" << filmC.x() << ", " << filmC.y() << ", " << filmC.z() << ")" << endl;
         buffer << "filmD = (" << filmD.x() << ", " << filmD.y() << ", " << filmD.z() << ")" << endl;
-        buffer << "pixelSize = (" << pixelSize.x() << ", " << pixelSize.y() << ")" << endl;
+        buffer << "pixelSize = "<< pixelSize << endl;
         return buffer.str();
     }
     // only deep copy the object, won't copy the RTCInner things
@@ -138,6 +138,7 @@ namespace pathTracer {
         camera = new Camera(this->origin, this->lookingAt, this->upAngle, this->f, this->fov, this->zNear, this->zFar, nullptr, this->resolution, nullptr, this->sampleOnePixel);
         this->scene->deepCopy(camera->scene);
         this->integrator->deepCopy(camera->integrator);
+        this->integrator->setPixelSize(camera->pixelSize);
     }
 
     Ray *Camera::sample_wi(float x, float y) {
@@ -161,15 +162,15 @@ namespace pathTracer {
         //cout << "pixelsize=" << pixelSize << ", sampleOnePixel=" << sampleOnePixel << endl;
         RandomGenerator randomGenerator;
         vector<Ray*> ray_N;
-        Vector2f upperLeft = { x_center - pixelSize.x() / 2, y_center - pixelSize.y() / 2 };
-        Vector2f stride = pixelSize / (int)sampleOnePixel;
+        Vector2f upperLeft = { x_center - pixelSize / 2, y_center - pixelSize / 2 };
+        float stride = pixelSize / (int)sampleOnePixel;
 
         vector<Vector2f> u2D = randomGenerator.uniform0To1By2D(sampleOnePixel);
         vector<int> shuffleArray = randomGenerator.shuffleN(sampleOnePixel);
 
         for (int i = 0; i < sampleOnePixel; ++i) {
-            float x = upperLeft.x() + ((float)i + u2D[i].x()) * stride.x();
-            float y = upperLeft.y() + ((float)shuffleArray[i] + u2D[i].y()) * stride.y();
+            float x = upperLeft.x() + ((float)i + u2D[i].x()) * stride;
+            float y = upperLeft.y() + ((float)shuffleArray[i] + u2D[i].y()) * stride;
             //cout << "   (x, y)=(" << x << ", " << y << ")" << endl;
             ray_N.push_back(sample_wi(x, y));
         }

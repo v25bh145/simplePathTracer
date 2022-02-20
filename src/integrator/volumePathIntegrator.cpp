@@ -245,6 +245,7 @@ namespace pathTracer {
     void VolumePathIntegrator::deepCopy(Integrator*& integrator)
     {
         integrator = new VolumePathIntegrator(this->maxDepth);
+        integrator->pixelSize = this->pixelSize;
     }
     string VolumePathIntegrator::toString()
     {

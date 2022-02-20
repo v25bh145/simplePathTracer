@@ -9,7 +9,6 @@
 #include "mathHelper.h"
 
 namespace pathTracer {
-
     class Ray {
     public:
         Ray() {
@@ -29,7 +28,7 @@ namespace pathTracer {
             //cout << toString() << endl;
             if (tMin > tMax) {
                 cout << "tMin > tMax while constructing Ray()" << endl;
-                assert(tMin < tMax);
+                assert(false);
             }
         };
         Ray(Vector3f origin, Vector3f destination) {

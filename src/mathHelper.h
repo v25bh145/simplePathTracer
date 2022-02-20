@@ -11,9 +11,12 @@
 namespace pathTracer {
     void orthogonal(Vector3f n, Vector3f &s, Vector3f &t);
     string vector3fToString(Vector3f v);
+    string vector2fToString(Vector2f v);
     Vector3f sameSide(Vector3f n, Vector3f w);
     bool vector3fEqualTo0(Vector3f vector3f);
     float triangleArea(Vector3f p1, Vector3f p2, Vector3f p3);
+    int clampi(int v, int a, int b);
+    float clampf(float v, float a, float b);
 }
 
 

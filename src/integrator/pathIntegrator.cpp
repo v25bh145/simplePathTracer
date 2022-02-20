@@ -141,6 +141,7 @@ namespace pathTracer {
     void PathIntegrator::deepCopy(Integrator*& integrator)
     {
         integrator = new PathIntegrator(this->maxDepth);
+        integrator->pixelSize = this->pixelSize;
     }
     string PathIntegrator::toString()
     {

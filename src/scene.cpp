@@ -49,6 +49,28 @@ namespace pathTracer {
                     rayHit.ray.org_y + rayHit.ray.dir_y * rayHit.ray.tfar,
                     rayHit.ray.org_z + rayHit.ray.dir_z * rayHit.ray.tfar,
             };
+            // differential
+            if (interaction->rayDifferential != nullptr) {
+                RTCRayHit rayHitDifferential;
+                rayHitDifferential.ray = interaction->rayDifferential->getRTCInnerRay();
+                rayHitDifferential.hit.geomID = RTC_INVALID_GEOMETRY_ID;
+                rayHitDifferential.hit.instID[0] = RTC_INVALID_GEOMETRY_ID;
+                struct RTCIntersectContext contextDifferential;
+                rtcInitIntersectContext(&contextDifferential);
+                rtcIntersect1(*RTCInnerScene, &contextDifferential, &rayHitDifferential);
+                // rayDifferential's ID == ray's ID
+                if (rayHitDifferential.hit.geomID == rayHit.hit.geomID) {
+                    Vector3f pDifferential = {
+                            rayHitDifferential.ray.org_x + rayHitDifferential.ray.dir_x * rayHitDifferential.ray.tfar,
+                            rayHitDifferential.ray.org_y + rayHitDifferential.ray.dir_y * rayHitDifferential.ray.tfar,
+                            rayHitDifferential.ray.org_z + rayHitDifferential.ray.dir_z * rayHitDifferential.ray.tfar,
+                    };
+                    pDifferential = pDifferential - interaction->p;
+                    interaction->pixelSizeProjected = pDifferential.norm();
+                    cout << "projected" << interaction->pixelSizeProjected << endl;
+                }
+            }
+            // UV
             if (rayHit.hit.geomID > 0) {
                 interaction->geometry = aggregation->findGeometryById(rayHit.hit.geomID);
                 Vector2f UV = interaction->geometry->getUV(interaction->p);

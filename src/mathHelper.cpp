@@ -28,6 +28,13 @@ namespace pathTracer {
         buffer << "(x=" << v.x() << ", y=" << v.y() << ", z=" << v.z() << ")";
         return buffer.str();
     }
+    string vector2fToString(Vector2f v)
+    {
+        string info = "";
+        ostringstream buffer(info);
+        buffer << "(x=" << v.x() << ", y=" << v.y() << ")";
+        return buffer.str();
+    }
     Vector3f sameSide(Vector3f n, Vector3f w)
     {
         return n.dot(w) > 0 ? n : -n;
@@ -43,5 +50,15 @@ namespace pathTracer {
             e3 = (p1 - p3).norm();
         float pt = (e1 + e2 + e3) / 2.f;
         return sqrt(pt * (pt - e1) * (pt - e2) * (pt - e3));
+    }
+    int clampi(int v, int a, int b)
+    {
+        v = v < a ? a : (v > b ? b : v);
+        return v;
+    }
+    float clampf(float v, float a, float b)
+    {
+        v = v < a ? a : (v > b ? b : v);
+        return v;
     }
 }

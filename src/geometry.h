@@ -37,8 +37,8 @@ namespace pathTracer {
         static unsigned RTCInnerObjNumber;
 
         //Geometry(BxDF* bxdf, Vector3f emitLight = {0, 0, 0}):bxdf(bxdf), emitLight(emitLight) {}
-        Geometry(BxDF* bxdf, Vector3f emitLight = { 0, 0, 0 }, Texture2D* texture = nullptr)
-            :bxdf(bxdf), emitLight(emitLight), texture(texture) {}
+        Geometry(BxDF* bxdf, Vector3f emitLight = { 0, 0, 0 })
+            :bxdf(bxdf), emitLight(emitLight) {}
         Geometry() {
             bxdf = nullptr;
         };
@@ -59,9 +59,9 @@ namespace pathTracer {
         virtual Medium* getOutsideMedium() = 0;
         virtual Medium* getInsideMedium() = 0;
         // texture
-        Texture2D* texture;
         virtual void attachTexture(Texture2D* texture, vector<Vector2f> uvArray) = 0;
         virtual Vector2f getUV(Vector3f p) = 0;
+        virtual Texture2D* getTexture() = 0;
         // object
         virtual void deepCopy(Geometry*& geometry) = 0;
         virtual string toString() = 0;

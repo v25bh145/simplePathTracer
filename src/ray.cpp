@@ -14,6 +14,7 @@ namespace pathTracer {
     }
 	RTCRay Ray::getRTCInnerRay() {
         RTCRay RTCInnerRay;
+        //cout << origin.x() << endl;
         RTCInnerRay.org_x = origin.x();
         RTCInnerRay.org_y = origin.y();
         RTCInnerRay.org_z = origin.z();
