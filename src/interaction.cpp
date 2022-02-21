@@ -5,16 +5,6 @@
 #include "interaction.h"
 
 namespace pathTracer {
-    void Interaction::genRayDifferential(float pixelSize)
-    {
-        this->rayDifferential = new Ray(this->ray);
-        this->rayDifferential->origin = { this->ray->origin.x() + pixelSize, this->ray->origin.y(), this->ray->origin.z() };
-    }
-    void Interaction::deleteRayDifferential()
-    {
-        if (rayDifferential == nullptr) return;
-        delete rayDifferential;
-    }
     string Interaction::toString() {
         string info = "";
         ostringstream buffer(info);

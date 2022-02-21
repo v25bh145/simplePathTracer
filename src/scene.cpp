@@ -50,31 +50,39 @@ namespace pathTracer {
                     rayHit.ray.org_z + rayHit.ray.dir_z * rayHit.ray.tfar,
             };
             // differential
-            if (interaction->rayDifferential != nullptr) {
-                RTCRayHit rayHitDifferential;
-                rayHitDifferential.ray = interaction->rayDifferential->getRTCInnerRay();
-                rayHitDifferential.hit.geomID = RTC_INVALID_GEOMETRY_ID;
-                rayHitDifferential.hit.instID[0] = RTC_INVALID_GEOMETRY_ID;
-                struct RTCIntersectContext contextDifferential;
-                rtcInitIntersectContext(&contextDifferential);
-                rtcIntersect1(*RTCInnerScene, &contextDifferential, &rayHitDifferential);
-                // rayDifferential's ID == ray's ID
-                if (rayHitDifferential.hit.geomID == rayHit.hit.geomID) {
-                    Vector3f pDifferential = {
-                            rayHitDifferential.ray.org_x + rayHitDifferential.ray.dir_x * rayHitDifferential.ray.tfar,
-                            rayHitDifferential.ray.org_y + rayHitDifferential.ray.dir_y * rayHitDifferential.ray.tfar,
-                            rayHitDifferential.ray.org_z + rayHitDifferential.ray.dir_z * rayHitDifferential.ray.tfar,
-                    };
-                    pDifferential = pDifferential - interaction->p;
-                    interaction->pixelSizeProjected = pDifferential.norm();
-                    cout << "projected" << interaction->pixelSizeProjected << endl;
-                }
-            }
+            
             // UV
             if (rayHit.hit.geomID > 0) {
                 interaction->geometry = aggregation->findGeometryById(rayHit.hit.geomID);
                 Vector2f UV = interaction->geometry->getUV(interaction->p);
                 interaction->u = UV.x(); interaction->v = UV.y();
+                pair<Vector3f, Vector3f> dpduv = interaction->geometry->getdpduv(interaction->p);
+                interaction->dpdu = dpduv.first;
+                interaction->dpdv = dpduv.second;
+                if (interaction->ray->differential.hasDifferential) {
+                    float d = interaction->normal.dot(interaction->p);
+
+                    Vector3f rxOrigin = interaction->ray->differential.rxOrigin;
+                    Vector3f rxDirection = interaction->ray->differential.rxDirection;
+                    if (interaction->normal.dot(rxDirection) < 1e-8) goto textureDifferentialFlag;
+                    float tx = -(interaction->normal.dot(rxOrigin) - d) / interaction->normal.dot(rxDirection);
+                    Vector3f px = rxOrigin + tx * rxDirection;
+
+                    Vector3f ryOrigin = interaction->ray->differential.ryOrigin;
+                    Vector3f ryDirection = interaction->ray->differential.ryDirection;
+                    if (interaction->normal.dot(ryDirection) < 1e-8) goto textureDifferentialFlag;
+                    float ty = -(interaction->normal.dot(ryOrigin) - d) / interaction->normal.dot(ryDirection);
+                    Vector3f py = ryOrigin + ty * ryDirection;
+
+                    interaction->dpdx = px - interaction->p;
+                    interaction->dpdy = py - interaction->p;
+
+                    // TODO: 二元一次方程组
+                }
+                else {
+    textureDifferentialFlag:
+                    interaction->dpdx = interaction->dpdy = interaction->dstdx = interaction->dstdy = { 0, 0, 0 };
+                }
             }
             else
                 interaction->geometry = nullptr;

@@ -13,7 +13,6 @@ namespace pathTracer {
 		//delete hitInteraction;
 		//if (hitGeomID != 8) return { 0, 0, 0 };
 		Interaction* p = new Interaction(origin_ray);
-		p->genRayDifferential(this->pixelSize);
 		unsigned hitId = scene->intersect(p);
 		if (hitId != 1 && hitId != 2) return { 0, 0, 0 };
 		if (hitId > 0) {
@@ -22,15 +21,14 @@ namespace pathTracer {
 			L += L + hitGeometry->emitLight;
 			if (hitGeometry->getTexture() != nullptr) {
 				Vector2f UV = hitGeometry->getUV(p->p);
-				Vector4f color = hitGeometry->getTexture()->mapping(UV, p->pixelSizeProjected);
+				// input: dstdx, dstdy
+				Vector4f color = hitGeometry->getTexture()->mapping(UV, );
 				L = { L.x() * color.x(), L.y() * color.y(), L.z() * color.z() };
 			}
-			p->deleteRayDifferential();
 			delete p;
 			return L;
 		}
 		else { 
-			p->deleteRayDifferential();
 			delete p;
 			return { 0, 0, 0 }; 
 		}

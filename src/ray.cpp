@@ -12,7 +12,15 @@ namespace pathTracer {
         tMin = RTCInnerRay.tnear;
         tMax = RTCInnerRay.tfar;
     }
-	RTCRay Ray::getRTCInnerRay() {
+    void Ray::setDifferential(pair<Vector3f, Vector3f> rxy, pair<Vector3f, Vector3f> rdxy)
+    {
+        this->differential.hasDifferential = true;
+        this->differential.rxOrigin = rxy.first;
+        this->differential.ryOrigin = rxy.second;
+        this->differential.rxDirection = rdxy.first;
+        this->differential.ryDirection = rdxy.second;
+    }
+    RTCRay Ray::getRTCInnerRay() {
         RTCRay RTCInnerRay;
         //cout << origin.x() << endl;
         RTCInnerRay.org_x = origin.x();

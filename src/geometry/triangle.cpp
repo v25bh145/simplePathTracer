@@ -86,6 +86,8 @@ namespace pathTracer {
 		triangle->p1UV = this->p1UV;
 		triangle->p2UV = this->p2UV;
 		triangle->p3UV = this->p3UV;
+		triangle->dpdu = this->dpdu;
+		triangle->dpdv = this->dpdv;
 	}
 	Medium* Triangle::getOutsideMedium()
 	{
@@ -106,6 +108,21 @@ namespace pathTracer {
 		p1UV = uvArray[0];
 		p2UV = uvArray[1];
 		p3UV = uvArray[2];
+		// calculate dpdu & dpdv
+		Matrix2f duv;
+		duv << p1UV.x() - p3UV.x(), p2UV.x() - p3UV.x(), 
+			   p1UV.y() - p3UV.y(), p2UV.y() - p3UV.y();
+		pair<Vector3f, Vector3f> dp = { p1 - p3, p2 - p3 };
+		float det = duv.determinant();
+		if (abs(det) < 1e-8) {
+			// select two orthogonal directions
+			orthogonal(outsideNormal, this->dpdu, this->dpdv);
+		}
+		else {
+			float invDet = 1.f / det;
+			this->dpdu = (duv(1, 1) * dp.first - duv(0, 1) * dp.second) * invDet;
+			this->dpdv = (-duv(1, 0) * dp.first + duv(0, 0) * dp.second) * invDet;
+		}
 	}
 	Vector2f Triangle::getUV(Vector3f p)
 	{
@@ -122,6 +139,14 @@ namespace pathTracer {
 		//cout << "p2UV " << vector2fToString(p2UV) << endl;
 		//cout << "p3UV " << vector2fToString(p3UV) << endl;
 		return barycentric.x() * p1UV + barycentric.y() * p2UV + barycentric.z() * p3UV;
+	}
+	pair<Vector3f, Vector3f> Triangle::getdpduv(Vector3f p)
+	{
+		if (texture == nullptr) {
+			cout << "ERROR: can't call getdpduv() from a geometry which hasn't texture" << endl;
+			assert(false);
+		}
+		return {dpdu, dpdv};
 	}
 	Texture2D* Triangle::getTexture()
 	{

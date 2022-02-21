@@ -23,7 +23,9 @@ namespace pathTracer {
             , Geometry(bxdf, emitLight), outsideMedium(outsideMedium), insideMedium(insideMedium) {
             if (vector3fEqualTo0(outsideNormal)) {
                 // ccw
-                
+                Vector3f BC = p3 - p2;
+                Vector3f AB = p2 - p1;
+                outsideNormal = BC.cross(AB);
                 // input the normal from parameter
                 //if (bxdf != nullptr && bxdf->hasType(BxDFType::TRANSMISSION)) {
                 //    cout << "must set the outsideNormal when having set TRANSMISSION bxdf" << endl;
@@ -87,8 +89,10 @@ namespace pathTracer {
 
         // uvArray: according to the index of vertices(p1, p2, p3)
         Vector2f p1UV, p2UV, p3UV;
+        Vector3f dpdu, dpdv;
         void attachTexture(Texture2D* texture, vector<Vector2f> uvArray) override;
         Vector2f getUV(Vector3f p) override;
+        pair<Vector3f, Vector3f> getdpduv(Vector3f p) override;
         Texture2D* texture;
         Texture2D* getTexture() override;
 
