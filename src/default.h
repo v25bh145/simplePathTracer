@@ -30,6 +30,7 @@ using namespace Eigen;
 namespace pathTracer {
     const RTCDevice DEVICE = rtcNewDevice(NULL);
     const float PI = (float)acos(-1.0);
+    const float EPSILON = 0.000001f;
 }
 
 #endif //SIMPLEPATHTRACER_DEFAULT_H

@@ -95,6 +95,8 @@ namespace pathTracer {
         pair<Vector3f, Vector3f> getdpduv(Vector3f p) override;
         Texture2D* texture;
         Texture2D* getTexture() override;
+        float texelSize;
+        float getTexelSize(Vector3f p) override;
 
         string toString() override;
     };

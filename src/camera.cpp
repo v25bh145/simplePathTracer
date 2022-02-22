@@ -3,7 +3,7 @@
 //
 
 #include "camera.h"
-#define THREAD_N 1
+#define THREAD_N 16
 
 namespace pathTracer {
     DWORD WINAPI generateByThread(LPVOID lpParameter) {
@@ -153,7 +153,10 @@ namespace pathTracer {
 
         Ray *ray = new Ray(point, dir, 0, tNear, tFar);
         //cout << "generate camera ray:" << ray->toString() << endl;
-
+        // differential
+        Vector3f rxOrigin = { point.x() + pixelSize, point.y(), point.z() };
+        Vector3f ryOrigin = { point.x(), point.y() + pixelSize, point.z() };
+        ray->setDifferential({ rxOrigin, ryOrigin }, { dir, dir });
         return ray;
     }
     vector<Ray*> Camera::sample_wi_LHS(float x_center, float y_center)

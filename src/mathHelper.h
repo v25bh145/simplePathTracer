@@ -17,6 +17,8 @@ namespace pathTracer {
     float triangleArea(Vector3f p1, Vector3f p2, Vector3f p3);
     int clampi(int v, int a, int b);
     float clampf(float v, float a, float b);
+    bool binarySystemOfLinearEquations(Matrix2f A, Vector2f B, Vector2f &X);
+    bool ternarySystemOfLinearEquations(Matrix3f A, Vector3f B, Vector3f& X);
 }
 
 

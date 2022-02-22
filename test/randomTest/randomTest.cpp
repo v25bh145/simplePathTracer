@@ -26,5 +26,4 @@ int main(int argc, char** argv) {
     for (int i = 0; i < arr.size(); ++i) {
         cout << arr[i] + 1 << endl;
     }
-
 }

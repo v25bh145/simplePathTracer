@@ -37,9 +37,9 @@ namespace pathTracer{
         float v;
         // barycentric's differential
         Vector3f dpdu, dpdv;
-        // TODO
-        Vector2f dpdx, dpdy;
-        Vector2f dstdx, dstdy;
+        // to calculate(du = {dudx, dudy}, dv = {dvdx, dvdy})
+        Vector3f dpdx, dpdy;
+        float dudx, dudy, dvdx, dvdy;
         // RTCu & RTCv are not the coordinate in texture, but parameters in RTC inner core
         float RTCu;
         float RTCv;

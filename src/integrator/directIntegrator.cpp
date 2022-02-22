@@ -21,8 +21,8 @@ namespace pathTracer {
 			L += L + hitGeometry->emitLight;
 			if (hitGeometry->getTexture() != nullptr) {
 				Vector2f UV = hitGeometry->getUV(p->p);
-				// input: dstdx, dstdy
-				Vector4f color = hitGeometry->getTexture()->mapping(UV, );
+				// input: du, dv
+				Vector4f color = hitGeometry->getTexture()->mapping(UV, { p->dudx, p->dudy }, {p->dvdx, p->dvdy}, hitGeometry->getTexelSize(p->p));
 				L = { L.x() * color.x(), L.y() * color.y(), L.z() * color.z() };
 			}
 			delete p;

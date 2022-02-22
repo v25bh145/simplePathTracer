@@ -88,6 +88,7 @@ namespace pathTracer {
 		triangle->p3UV = this->p3UV;
 		triangle->dpdu = this->dpdu;
 		triangle->dpdv = this->dpdv;
+		triangle->texelSize = this->texelSize;
 	}
 	Medium* Triangle::getOutsideMedium()
 	{
@@ -109,20 +110,29 @@ namespace pathTracer {
 		p2UV = uvArray[1];
 		p3UV = uvArray[2];
 		// calculate dpdu & dpdv
+		// partialp/partialu * du + partialp/partialv * dv = dp [derivative]
 		Matrix2f duv;
 		duv << p1UV.x() - p3UV.x(), p2UV.x() - p3UV.x(), 
 			   p1UV.y() - p3UV.y(), p2UV.y() - p3UV.y();
 		pair<Vector3f, Vector3f> dp = { p1 - p3, p2 - p3 };
 		float det = duv.determinant();
-		if (abs(det) < 1e-8) {
+		if (abs(det) < EPSILON) {
 			// select two orthogonal directions
 			orthogonal(outsideNormal, this->dpdu, this->dpdv);
 		}
 		else {
 			float invDet = 1.f / det;
-			this->dpdu = (duv(1, 1) * dp.first - duv(0, 1) * dp.second) * invDet;
-			this->dpdv = (-duv(1, 0) * dp.first + duv(0, 0) * dp.second) * invDet;
+			this->dpdu = (duv(1, 1) * dp.first - duv(1, 0) * dp.second) * invDet;
+			this->dpdv = (-duv(0, 1) * dp.first + duv(0, 0) * dp.second) * invDet;
+			cout << "dpdu=" << vector3fToString(dpdu) << ", dpdv=" << vector3fToString(dpdv) << endl;
 		}
+		// texelSize
+		float objectLengthP1P2 = (p1 - p2).norm();
+		float dpUVX = p1UV.x() - p2UV.x();
+		float dpUVY = p1UV.y() - p2UV.y();
+		float textureLengthP1P2 = sqrt(dpUVX * dpUVX * texture->width * texture->width + dpUVY * dpUVY * texture->height * texture->height);
+		this->texelSize = objectLengthP1P2 / textureLengthP1P2;
+		cout << "texelSize=" << texelSize << endl;
 	}
 	Vector2f Triangle::getUV(Vector3f p)
 	{
@@ -134,10 +144,6 @@ namespace pathTracer {
 		barycentric.x() = areaPP2P3 / areaP1P2P3;
 		barycentric.z() = areaPP1P2 / areaP1P2P3;
 		barycentric.y() = 1.f - barycentric.x() - barycentric.z();
-		//cout << "bc " << vector3fToString(barycentric) << endl;
-		//cout << "p1UV " << vector2fToString(p1UV) << endl;
-		//cout << "p2UV " << vector2fToString(p2UV) << endl;
-		//cout << "p3UV " << vector2fToString(p3UV) << endl;
 		return barycentric.x() * p1UV + barycentric.y() * p2UV + barycentric.z() * p3UV;
 	}
 	pair<Vector3f, Vector3f> Triangle::getdpduv(Vector3f p)
@@ -151,6 +157,14 @@ namespace pathTracer {
 	Texture2D* Triangle::getTexture()
 	{
 		return texture;
+	}
+	float Triangle::getTexelSize(Vector3f p)
+	{
+		if (texture == nullptr) {
+			cout << "ERROR: can't call getTexelSize() from a geometry which hasn't texture" << endl;
+			assert(false);
+		}
+		return texelSize;
 	}
 	string Triangle::toString()
 	{

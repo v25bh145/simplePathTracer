@@ -62,6 +62,7 @@ namespace pathTracer {
         virtual void attachTexture(Texture2D* texture, vector<Vector2f> uvArray) = 0;
         virtual Vector2f getUV(Vector3f p) = 0;
         virtual pair<Vector3f, Vector3f> getdpduv(Vector3f p) = 0;
+        virtual float getTexelSize(Vector3f p) = 0;
         virtual Texture2D* getTexture() = 0;
         // object
         virtual void deepCopy(Geometry*& geometry) = 0;

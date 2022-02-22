@@ -61,4 +61,26 @@ namespace pathTracer {
         v = v < a ? a : (v > b ? b : v);
         return v;
     }
+    bool binarySystemOfLinearEquations(Matrix2f A, Vector2f B, Vector2f &X)
+    {
+        X = { 0.f, 0.f };
+        float det = A.determinant();
+        if (abs(det) < EPSILON) {
+            return false;
+        }
+        Matrix2f invA = A.inverse();
+        X = invA * B;
+        return true;
+    }
+    bool ternarySystemOfLinearEquations(Matrix3f A, Vector3f B, Vector3f& X)
+    {
+        X = { 0.f, 0.f, 0.f };
+        float det = A.determinant();
+        if (abs(det) < EPSILON) {
+            return false;
+        }
+        Matrix3f invA = A.inverse();
+        X = invA * B;
+        return true;
+    }
 }
