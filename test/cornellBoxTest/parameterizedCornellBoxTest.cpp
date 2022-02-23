@@ -150,8 +150,8 @@ int main(int argc, char** argv) {
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
     // Ray information: origin (x=-0.533653, y=-16, z=6.04339), dir (x=0.357406, y=0.862869, z=-0.357377), tMin=9.2714, tMax=241.056
 
-    VolumePathIntegrator* integrator = new VolumePathIntegrator(5);
-    //PathIntegrator* integrator = new PathIntegrator(5);
+    //VolumePathIntegrator* integrator = new VolumePathIntegrator(5);
+    PathIntegrator* integrator = new PathIntegrator(5);
     //DirectIntegrator* integrator = new DirectIntegrator();
 
     Vector3f cameraOrigin = { 0.5f, -1.45f, 0.5f };

@@ -25,8 +25,11 @@ namespace pathTracer {
             t = ray->t;
             tMin = ray->tMin;
             tMax = ray->tMax;
-            this->differential.hasDifferential = false;
-            this->differential.rxDirection = this->differential.rxOrigin = this->differential.ryDirection = this->differential.ryOrigin = { 0, 0, 0 };
+            this->differential.hasDifferential = ray->differential.hasDifferential;
+            this->differential.rxDirection = ray->differential.rxDirection;
+            this->differential.rxOrigin = ray->differential.rxOrigin;
+            this->differential.ryDirection = ray->differential.ryDirection;
+            this->differential.ryOrigin = ray->differential.ryOrigin;
         }
         Ray(Vector3f origin, Vector3f direction, float t, float tMin = 0, float tMax = numeric_limits<float>::infinity()):origin(origin),direction(direction.normalized()),t(t),tMin(tMin),tMax(tMax) {
             //cout << toString() << endl;

@@ -158,8 +158,8 @@ namespace pathTracer {
             Vector3f newRayOrigin = hitInteraction->p + wi->direction * 0.0005f;
             ray = new Ray(newRayOrigin, wi->direction, 0);
             if (differentialFlag) {
-                Vector3f newRayOriginX = hitInteraction->p + hitInteraction->dpdx + wi->direction * 0.1;
-                Vector3f newRayOriginY = hitInteraction->p + hitInteraction->dpdy + wi->direction * 0.1;
+                Vector3f newRayOriginX = hitInteraction->p + hitInteraction->dpdx + wi->direction * 0.0005f;
+                Vector3f newRayOriginY = hitInteraction->p + hitInteraction->dpdy + wi->direction * 0.0005f;
                 ray->setDifferential({ newRayOriginX, newRayOriginY }, { wi->direction, wi->direction });
             }
 

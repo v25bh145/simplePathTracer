@@ -148,12 +148,10 @@ namespace pathTracer {
                     }
                     else {
                     textureDifferentialFailFlag:
-                        interaction->dpdx = interaction->dpdy = { 0, 0, 0 };
                         interaction->dudx = interaction->dudy = interaction->dvdx = interaction->dvdy = 0;
                     }
                 }
                 else {
-                    interaction->dpdx = interaction->dpdy = { 0, 0, 0 };
                     interaction->dpdx = interaction->dpdy = { 0, 0, 0 };
                     interaction->dudx = interaction->dudy = interaction->dvdx = interaction->dvdy = 0;
                 }

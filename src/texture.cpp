@@ -54,9 +54,12 @@ namespace pathTracer {
 				break;
 			}
 		}
-		//cout << "pixel: du=" << vector2fToString(du) << ", dv=" << vector2fToString(dv) << endl;
-		//cout << "pixel: u=" << u << ", v=" << v << endl;
-		
+		//string info = "";
+		//ostringstream buffer(info);
+		//buffer << "pixel: uv=" << vector2fToString(uv) << "du = " << vector2fToString(du) << ", || du || = " << du.norm() << ", ";
+		//buffer << "dv= " << vector2fToString(dv) << ", ||dv||=" << dv.norm() << ", texelSize=" << texelSize << endl;
+		//cout << buffer.str() << endl;
+
 		// no MIPMap
 		Vector4f color = { 0.f, 0.f, 0.f, 0.f };
 		switch (filterMode) {
