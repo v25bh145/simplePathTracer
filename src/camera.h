@@ -25,6 +25,8 @@ namespace pathTracer {
         // angle rotated when shooting [Angle System]
         Vector3f upAngle;
         int sampleOnePixel;
+        // LHS
+        int filterRange;
         float fov;
         float zNear;
         float zFar;
@@ -41,8 +43,8 @@ namespace pathTracer {
         Integrator *integrator;
         Scene *scene;
 
-        Camera(Vector3f origin, Vector3f lookingAt, Vector3f upAngle, float f, float fov, float zNear, float zFar, Scene *scene, Vector2i resolution, Integrator *integrator, int sampleOnePixel)
-        :origin(origin), lookingAt(lookingAt.normalized()), upAngle(upAngle.normalized()), f(f), fov(fov),zNear(zNear),zFar(zFar), scene(scene),resolution(resolution),integrator(integrator), sampleOnePixel(sampleOnePixel > 0 ? sampleOnePixel : 1){
+        Camera(Vector3f origin, Vector3f lookingAt, Vector3f upAngle, float f, float fov, float zNear, float zFar, Scene *scene, Vector2i resolution, Integrator *integrator, int sampleOnePixel, int filterRange = 0)
+        :origin(origin), lookingAt(lookingAt.normalized()), upAngle(upAngle.normalized()), f(f), fov(fov),zNear(zNear),zFar(zFar), scene(scene),resolution(resolution),integrator(integrator), sampleOnePixel(sampleOnePixel > 0 ? sampleOnePixel : 1), filterRange(filterRange < 0 ? 0 : filterRange) {
             pixels = new Vector3f*[this->resolution.x()];
             for(int i = 0; i < this->resolution.x(); ++i)
                 pixels[i] = new Vector3f[this->resolution.y()];

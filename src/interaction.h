@@ -40,6 +40,9 @@ namespace pathTracer{
         // to calculate(du = {dudx, dudy}, dv = {dvdx, dvdy})
         Vector3f dpdx, dpdy;
         float dudx, dudy, dvdx, dvdy;
+        // get function
+        Vector2f getDuDxy();
+        Vector2f getDvDxy();
         // RTCu & RTCv are not the coordinate in texture, but parameters in RTC inner core
         float RTCu;
         float RTCv;

@@ -135,7 +135,7 @@ namespace pathTracer {
     // only deep copy the object, won't copy the RTCInner things
     void Camera::deepCopy(Camera*& camera)
     {
-        camera = new Camera(this->origin, this->lookingAt, this->upAngle, this->f, this->fov, this->zNear, this->zFar, nullptr, this->resolution, nullptr, this->sampleOnePixel);
+        camera = new Camera(this->origin, this->lookingAt, this->upAngle, this->f, this->fov, this->zNear, this->zFar, nullptr, this->resolution, nullptr, this->sampleOnePixel, this->filterRange);
         this->scene->deepCopy(camera->scene);
         this->integrator->deepCopy(camera->integrator);
         this->integrator->setPixelSize(camera->pixelSize);
@@ -165,16 +165,16 @@ namespace pathTracer {
         //cout << "pixelsize=" << pixelSize << ", sampleOnePixel=" << sampleOnePixel << endl;
         RandomGenerator randomGenerator;
         vector<Ray*> ray_N;
-        Vector2f upperLeft = { x_center - pixelSize / 2, y_center - pixelSize / 2 };
-        float stride = pixelSize / (int)sampleOnePixel;
-
+        Vector2f bottomLeft = { x_center - pixelSize / 2 - pixelSize * filterRange, y_center - pixelSize / 2 - pixelSize * filterRange };
+        float filterSize = (2 * filterRange + 1) * pixelSize;
+        float stride = filterSize / (float)sampleOnePixel;
         vector<Vector2f> u2D = randomGenerator.uniform0To1By2D(sampleOnePixel);
         vector<int> shuffleArray = randomGenerator.shuffleN(sampleOnePixel);
 
         for (int i = 0; i < sampleOnePixel; ++i) {
-            float x = upperLeft.x() + ((float)i + u2D[i].x()) * stride;
-            float y = upperLeft.y() + ((float)shuffleArray[i] + u2D[i].y()) * stride;
-            //cout << "   (x, y)=(" << x << ", " << y << ")" << endl;
+            float x = bottomLeft.x() + ((float)i + u2D[i].x()) * stride;
+            float y = bottomLeft.y() + ((float)shuffleArray[i] + u2D[i].y()) * stride;
+            //cout << "   (x, y)=(" << x << ", " << y << ")" << ", u2D[" << i << "]=" << vector2fToString(u2D[i]) << endl;
             ray_N.push_back(sample_wi(x, y));
         }
         return ray_N;

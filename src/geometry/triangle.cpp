@@ -144,6 +144,8 @@ namespace pathTracer {
 		barycentric.x() = areaPP2P3 / areaP1P2P3;
 		barycentric.z() = areaPP1P2 / areaP1P2P3;
 		barycentric.y() = 1.f - barycentric.x() - barycentric.z();
+		// Problems: cause of the accuracy of float
+		if (barycentric.y() < 0.f) barycentric.y() = 0.f;
 		return barycentric.x() * p1UV + barycentric.y() * p2UV + barycentric.z() * p3UV;
 	}
 	pair<Vector3f, Vector3f> Triangle::getdpduv(Vector3f p)
@@ -180,6 +182,9 @@ namespace pathTracer {
 			buffer << "outsideMedium = " << this->outsideMedium->toString() << endl;
 		else
 			buffer << "outsideMedium = nullptr" << endl;
+		buffer << "p1=" << vector3fToString(this->p1) << endl;
+		buffer << "p2=" << vector3fToString(this->p2) << endl;
+		buffer << "p3=" << vector3fToString(this->p3) << endl;
 		return buffer.str();
 	}
 }

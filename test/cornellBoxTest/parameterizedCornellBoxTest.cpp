@@ -131,8 +131,7 @@ int main(int argc, char** argv) {
 
     Texture2D* bricksTexture = new Texture2D("../../../../assets/bricks2.jpg", BORDER_STRATEGY::BLACK, BORDER_STRATEGY::BLACK, FILTERMODE::BILERP);
     // TODO
-    // 1. ray differential propogation
-    // 2. MIPMAP
+    // MIPMAP
     floor1->attachTexture(bricksTexture, { {1.f, 0.f}, {0.f, 0.f}, {0.f, 1.f} });
     //floor1->attachTexture(bricksTexture, { {1.f, 0.2f}, {0.f, 0.f}, {0.4f, 1.f} });
     floor2->attachTexture(bricksTexture, { {1.f, 0.f}, {0.f, 1.f}, {1.f, 1.f} });
@@ -151,15 +150,18 @@ int main(int argc, char** argv) {
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
     // Ray information: origin (x=-0.533653, y=-16, z=6.04339), dir (x=0.357406, y=0.862869, z=-0.357377), tMin=9.2714, tMax=241.056
 
-    //VolumePathIntegrator* integrator = new VolumePathIntegrator(5);
+    VolumePathIntegrator* integrator = new VolumePathIntegrator(5);
     //PathIntegrator* integrator = new PathIntegrator(5);
-    DirectIntegrator* integrator = new DirectIntegrator();
+    //DirectIntegrator* integrator = new DirectIntegrator();
 
     Vector3f cameraOrigin = { 0.5f, -1.45f, 0.5f };
     Vector3f cameraLookingAt = { 0, 1, 0 };
     Vector3f cameraUpAngle = { 0, 0, 1 };
     Vector2i resolution = { 512, 512 };
-    auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 1.45f, PI * 7 / 18, 0, 200.f, scene, resolution, integrator, 20);
+    int sampleOnePixel = 20;
+    // matrix size = filterRange * 2 + 1
+    int filterRange = 1;
+    auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 1.45f, PI * 7 / 18, 0, 200.f, scene, resolution, integrator, sampleOnePixel, filterRange);
     cout << camera->toString() << endl;
     cout << "begin generating" << endl;
     camera->generate();

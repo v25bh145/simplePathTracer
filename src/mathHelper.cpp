@@ -48,6 +48,9 @@ namespace pathTracer {
         float e1 = (p1 - p2).norm(),
             e2 = (p2 - p3).norm(),
             e3 = (p1 - p3).norm();
+        if (e1 > e2 && e1 > e3 && abs(e2 + e3 - e1) < EPSILON) return 0.f;
+        if (e2 > e3 && e2 > e1 && abs(e1 + e3 - e2) < EPSILON) return 0.f;
+        if (e3 > e2 && e3 > e1 && abs(e1 + e2 - e3) < EPSILON) return 0.f;
         float pt = (e1 + e2 + e3) / 2.f;
         return sqrt(pt * (pt - e1) * (pt - e2) * (pt - e3));
     }

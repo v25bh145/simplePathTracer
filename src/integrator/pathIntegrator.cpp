@@ -7,11 +7,10 @@
 namespace pathTracer {
 
     Vector3f PathIntegrator::sample_li(Scene *scene, Ray *origin_ray) {
-
         //auto* hitInteraction = new Interaction(origin_ray);
         //unsigned hitGeomID = scene->intersect(hitInteraction);
         //Geometry* hitGeometry = hitInteraction->geometry;
-        //if (hitGeomID != 16) return { 0, 0, 0 };
+        //if (hitGeomID != 3 && hitGeomID != 4 && hitGeomID != 5 && hitGeomID != 6) return { 0, 0, 0 };
         //else {
         //    Ray* wi = new Ray();
         //    float wi_pdf;
@@ -31,7 +30,7 @@ namespace pathTracer {
             auto* hitInteraction = new Interaction(ray);
             unsigned hitGeomID = scene->intersect(hitInteraction);
             Geometry* hitGeometry = hitInteraction->geometry;
-            //cout << "   bounce=" << bounce << ", 当前交点=" << vector3fToString(hitInteraction->p) << ", id=" << hitGeomID << ", 入射方向=" << vector3fToString(hitInteraction->ray->direction) << endl;
+            //cout << "   bounce=" << bounce << ", 当前交点=" << vector3fToString(hitInteraction->p) << ", id=" << hitGeomID << ", 入射点=" << vector3fToString(hitInteraction->ray->origin) << endl;
 
             // if this is the first ray OR the last ray sampled has a type SPECULAR
             if (bounce == 0 || isSpecular) {
@@ -43,6 +42,14 @@ namespace pathTracer {
                             hitGeometry->emitLight.z() * beta.z()
                     };
                     //cout << "   自身光源*beta=" << vector3fToString(sum) << endl;
+                    // texture color
+                    if (hitGeometry->getTexture() != nullptr) {
+                        Vector2f UV = hitGeometry->getUV(hitInteraction->p);
+                        // input: du, dv
+                        float texelSize = hitGeometry->getTexelSize(hitInteraction->p);
+                        Vector4f color = hitGeometry->getTexture()->mapping(UV, hitInteraction->getDuDxy(), hitInteraction->getDvDxy(), texelSize);
+                        sum = { sum.x() * color.x(), sum.y() * color.y(), sum.z() * color.z() };
+                    }
                     L += sum;
                 }
                 // if the ray don't hit any geometry, break this endless while
@@ -69,6 +76,14 @@ namespace pathTracer {
                 };
                 //cout << "   直接光照=" << vector3fToString(ld) << endl;
                 //cout << "   直接光照*beta=" << vector3fToString(mul) << endl;
+                // texture color
+                if (hitGeometry->getTexture() != nullptr) {
+                    Vector2f UV = hitGeometry->getUV(hitInteraction->p);
+                    // input: du, dv
+                    float texelSize = hitGeometry->getTexelSize(hitInteraction->p);
+                    Vector4f color = hitGeometry->getTexture()->mapping(UV, hitInteraction->getDuDxy(), hitInteraction->getDvDxy(), texelSize);
+                    mul = { mul.x() * color.x(), mul.y() * color.y(), mul.z() * color.z() };
+                }
                 L += mul;
             }
 
@@ -92,7 +107,14 @@ namespace pathTracer {
             mul /= wi_pdf;
             //cout << "     pdf=" << wi_pdf << endl;
 
-
+            // texture color
+            if (hitGeometry->getTexture() != nullptr) {
+                Vector2f UV = hitGeometry->getUV(hitInteraction->p);
+                // input: du, dv
+                float texelSize = hitGeometry->getTexelSize(hitInteraction->p);
+                Vector4f color = hitGeometry->getTexture()->mapping(UV, hitInteraction->getDuDxy(), hitInteraction->getDvDxy(), texelSize);
+                beta = { beta.x() * color.x(), beta.y() * color.y(), beta.z() * color.z() };
+            }
             beta = {
                     beta.x() * mul.x() > 1 ? 1 : beta.x() * mul.x(),
                     beta.y() * mul.y() > 1 ? 1 : beta.y() * mul.y(),
@@ -129,8 +151,18 @@ namespace pathTracer {
 
             // update the bounce
             bounce++;
+
+            // ray propogation
+            bool differentialFlag = ray->differential.hasDifferential;
             delete ray;
-            ray = new Ray(hitInteraction->p + wi->direction * 0.1, wi->direction, 0);
+            Vector3f newRayOrigin = hitInteraction->p + wi->direction * 0.0005f;
+            ray = new Ray(newRayOrigin, wi->direction, 0);
+            if (differentialFlag) {
+                Vector3f newRayOriginX = hitInteraction->p + hitInteraction->dpdx + wi->direction * 0.1;
+                Vector3f newRayOriginY = hitInteraction->p + hitInteraction->dpdy + wi->direction * 0.1;
+                ray->setDifferential({ newRayOriginX, newRayOriginY }, { wi->direction, wi->direction });
+            }
+
             delete wi;
             delete hitInteraction;
         }

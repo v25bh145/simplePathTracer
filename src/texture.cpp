@@ -17,7 +17,7 @@ namespace pathTracer {
 		float u = uv.x() * width;
 		float v = uv.y() * height;
 		int floorU = floor(u);
-		if (u > width) {
+		if (u > (float)width - 1.f) {
 			switch (SAxisBorderStrategy) {
 			case BORDER_STRATEGY::BLACK:
 				return { 0, 0, 0, 0 };
@@ -36,7 +36,7 @@ namespace pathTracer {
 			}
 		}
 		int floorV = floor(v);
-		if (v > height) {
+		if (v > (float)height - 1.f) {
 			switch (TAxisBorderStrategy) {
 			case BORDER_STRATEGY::BLACK:
 				return { 0, 0, 0, 0 };
@@ -56,7 +56,7 @@ namespace pathTracer {
 		}
 		//cout << "pixel: du=" << vector2fToString(du) << ", dv=" << vector2fToString(dv) << endl;
 		//cout << "pixel: u=" << u << ", v=" << v << endl;
-
+		
 		// no MIPMap
 		Vector4f color = { 0.f, 0.f, 0.f, 0.f };
 		switch (filterMode) {
@@ -69,6 +69,8 @@ namespace pathTracer {
 			break;
 		}
 		case FILTERMODE::BILERP: {
+			// can't use the previous floorU & floorV, because at that time u & v may be out of range 
+			float floorU = floor(u), floorV = floor(v);
 			float decimalU = u - floorU, decimalV = v - floorV;
 			Vector4f colorA = getColor(floorU, floorV);
 			Vector4f colorB = getColor(floorU + 1, floorV);

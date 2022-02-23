@@ -5,6 +5,14 @@
 #include "interaction.h"
 
 namespace pathTracer {
+    Vector2f Interaction::getDuDxy()
+    {
+        return { this->dudx, this->dudy };
+    }
+    Vector2f Interaction::getDvDxy()
+    {
+        return { this->dvdx, this->dvdy };
+    }
     string Interaction::toString() {
         string info = "";
         ostringstream buffer(info);
