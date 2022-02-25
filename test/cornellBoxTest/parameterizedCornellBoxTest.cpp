@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     auto* iron_microfacet = new Microfacet({ 0.46f, 0.46f, 0.47f }, MicrofacetDistributionType::BECKMANNISOTROPIC, 1.f);
     auto* green_microfacet = new Microfacet({ 0.14f, 0.091f, 0.45f }, MicrofacetDistributionType::BECKMANNISOTROPIC, 1.f);
 
-    auto* muddyMedium = new Medium({ 0.20f, 3.5f, 3.5f }, { 0.9f, 0.05f, 0.05f });
+    auto* muddyMedium = new Medium({ 1.85f, 0.35f, 3.85f }, { 0.f, 2.85f, 1.f });
 
     //geometry creation
     auto* floor1 = new Triangle({ 1.f, 0, 0 }, { 0, 0, 0 }, { 0, 1.f, 0 }, white_diffuse, { 0, 0, 0 });
@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
     aggregation->push_back(tall_block_52);
     scene->commit();
 
-    Texture2D* bricksTexture = new Texture2D("../../../../assets/bricks2.jpg", BORDER_STRATEGY::BLACK, BORDER_STRATEGY::BLACK, FILTERMODE::BILERP);
+    Texture2D* bricksTexture = new Texture2D("../../../../assets/bricks2.jpg", BORDER_STRATEGY::BLACK, BORDER_STRATEGY::BLACK, FILTERMODE::BILERP, MIPMAP_AUTO);
     // TODO
     // MIPMAP
     floor1->attachTexture(bricksTexture, { {1.f, 0.f}, {0.f, 0.f}, {0.f, 1.f} });
@@ -150,18 +150,18 @@ int main(int argc, char** argv) {
     cout << "geometries count: " << scene->aggregation->geometries.size() << endl;
     // Ray information: origin (x=-0.533653, y=-16, z=6.04339), dir (x=0.357406, y=0.862869, z=-0.357377), tMin=9.2714, tMax=241.056
 
-    //VolumePathIntegrator* integrator = new VolumePathIntegrator(5);
-    PathIntegrator* integrator = new PathIntegrator(5);
+    VolumePathIntegrator* integrator = new VolumePathIntegrator(6);
+    //PathIntegrator* integrator = new PathIntegrator(6);
     //DirectIntegrator* integrator = new DirectIntegrator();
 
-    Vector3f cameraOrigin = { 0.5f, -1.45f, 0.5f };
+    Vector3f cameraOrigin = { 0.5f, -1.25f, 0.5f };
     Vector3f cameraLookingAt = { 0, 1, 0 };
     Vector3f cameraUpAngle = { 0, 0, 1 };
-    Vector2i resolution = { 512, 512 };
-    int sampleOnePixel = 20;
+    Vector2i resolution = { 1024, 1024 };
+    int sampleOnePixel = 30;
     // matrix size = filterRange * 2 + 1
-    int filterRange = 1;
-    auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 1.45f, PI * 7 / 18, 0, 200.f, scene, resolution, integrator, sampleOnePixel, filterRange);
+    int filterRange = 0;
+    auto* camera = new Camera(cameraOrigin, cameraLookingAt, cameraUpAngle, 1.25f, PI / 4.f, 0, 200.f, scene, resolution, integrator, sampleOnePixel, filterRange);
     cout << camera->toString() << endl;
     cout << "begin generating" << endl;
     camera->generate();

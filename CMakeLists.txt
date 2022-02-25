@@ -75,6 +75,8 @@ set(
         ${PROJECT_SOURCE_DIR}/src/bxdf/bsdf/microfacet.cpp
         ${PROJECT_SOURCE_DIR}/src/texture.cpp
         ${PROJECT_SOURCE_DIR}/src/texture.h
+        ${PROJECT_SOURCE_DIR}/src/MIPMAP.cpp
+        ${PROJECT_SOURCE_DIR}/src/MIPMAP.h
 )
 
 set (

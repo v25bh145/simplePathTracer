@@ -53,4 +53,6 @@
 
 #include "texture.h"
 
+#include "MIPMAP.h"
+
 #endif

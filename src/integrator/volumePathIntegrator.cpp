@@ -146,7 +146,7 @@ namespace pathTracer {
                             Vector2f UV = hitGeometry->getUV(hitInteraction->p);
                             // input: du, dv
                             float texelSize = hitGeometry->getTexelSize(hitInteraction->p);
-                            Vector4f color = hitGeometry->getTexture()->mapping(UV, hitInteraction->getDuDxy(), hitInteraction->getDvDxy(), texelSize);
+                            Vector4f color = hitGeometry->getTexture()->mapping(UV, hitInteraction->getDuDxy(), hitInteraction->getDvDxy());
                             sum = { sum.x() * color.x(), sum.y() * color.y(), sum.z() * color.z() };
                         }
                         L += sum;
@@ -181,7 +181,7 @@ namespace pathTracer {
                         Vector2f UV = hitGeometry->getUV(hitInteraction->p);
                         // input: du, dv
                         float texelSize = hitGeometry->getTexelSize(hitInteraction->p);
-                        Vector4f color = hitGeometry->getTexture()->mapping(UV, hitInteraction->getDuDxy(), hitInteraction->getDvDxy(), texelSize);
+                        Vector4f color = hitGeometry->getTexture()->mapping(UV, hitInteraction->getDuDxy(), hitInteraction->getDvDxy());
                         mul = { mul.x() * color.x(), mul.y() * color.y(), mul.z() * color.z() };
                     }
                     L += mul;
@@ -208,7 +208,7 @@ namespace pathTracer {
                     Vector2f UV = hitGeometry->getUV(hitInteraction->p);
                     // input: du, dv
                     float texelSize = hitGeometry->getTexelSize(hitInteraction->p);
-                    Vector4f color = hitGeometry->getTexture()->mapping(UV, hitInteraction->getDuDxy(), hitInteraction->getDvDxy(), texelSize);
+                    Vector4f color = hitGeometry->getTexture()->mapping(UV, hitInteraction->getDuDxy(), hitInteraction->getDvDxy());
                     beta = { beta.x() * color.x(), beta.y() * color.y(), beta.z() * color.z() };
                 }
                 beta = {

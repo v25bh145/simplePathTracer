@@ -3,7 +3,7 @@ namespace pathTracer {
 	void Texture2D::deepCopy(Texture2D*& texture2D)
 	{
 		texture2D = new Texture2D();
-		texture2D->data = this->data;
+		texture2D->mipmap = this->mipmap;
 		texture2D->format = this->format;
 		texture2D->height = this->height;
 		texture2D->width = this->width;
@@ -12,7 +12,7 @@ namespace pathTracer {
 		texture2D->nrComponents = this->nrComponents;
 		texture2D->filterMode = this->filterMode;
 	}
-	Vector4f Texture2D::mapping(Vector2f uv, Vector2f du, Vector2f dv, float texelSize)
+	Vector4f Texture2D::mapping(Vector2f uv, Vector2f du, Vector2f dv)
 	{
 		float u = uv.x() * width;
 		float v = uv.y() * height;
@@ -54,13 +54,20 @@ namespace pathTracer {
 				break;
 			}
 		}
+		//return { du.x(), 0.f, 0.f, 0.f };
+
+		// MIPMap level
+		// TODO: 各向异性过滤
+		float mipmapWidth = max(abs(du.x()), max(abs(du.y()), max(abs(dv.x()), abs(dv.y()))));
+
 		//string info = "";
 		//ostringstream buffer(info);
 		//buffer << "pixel: uv=" << vector2fToString(uv) << "du = " << vector2fToString(du) << ", || du || = " << du.norm() << ", ";
 		//buffer << "dv= " << vector2fToString(dv) << ", ||dv||=" << dv.norm() << ", texelSize=" << texelSize << endl;
 		//cout << buffer.str() << endl;
 
-		// no MIPMap
+		//cout << mipmapWidth << endl;
+
 		Vector4f color = { 0.f, 0.f, 0.f, 0.f };
 		switch (filterMode) {
 		case FILTERMODE::NEAREST: {
@@ -68,17 +75,17 @@ namespace pathTracer {
 			uInt = clampi(uInt, 0, width - 1);
 			vInt = clampi(vInt, 0, height - 1);
 			//cout << "uInt=" << uInt << ", vInt=" << vInt << endl;
-			color = getColor(uInt, vInt);
+			color = getColor(uInt, vInt, mipmapWidth);
 			break;
 		}
 		case FILTERMODE::BILERP: {
 			// can't use the previous floorU & floorV, because at that time u & v may be out of range 
 			float floorU = floor(u), floorV = floor(v);
 			float decimalU = u - floorU, decimalV = v - floorV;
-			Vector4f colorA = getColor(floorU, floorV);
-			Vector4f colorB = getColor(floorU + 1, floorV);
-			Vector4f colorC = getColor(floorU, floorV + 1);
-			Vector4f colorD = getColor(floorU + 1, floorV + 1);
+			Vector4f colorA = getColor(floorU, floorV, mipmapWidth);
+			Vector4f colorB = getColor(floorU + 1, floorV, mipmapWidth);
+			Vector4f colorC = getColor(floorU, floorV + 1, mipmapWidth);
+			Vector4f colorD = getColor(floorU + 1, floorV + 1, mipmapWidth);
 			Vector4f colorLerpAB = colorA * decimalU + colorB * (1.f - decimalU);
 			Vector4f colorLerpCD = colorC * decimalU + colorD * (1.f - decimalU);
 			color = colorLerpAB * decimalV + colorLerpCD * (1.f - decimalV);
@@ -89,16 +96,17 @@ namespace pathTracer {
 		color /= 255.f;
 		return color;
 	}
-	Vector4f Texture2D::getColor(int u, int v)
+	Vector4f Texture2D::getColor(int u, int v, float mipmapLevel = 0.f)
 	{
-		Vector4f color = { 0.f, 0.f, 0.f, 0.f };
-		int index = (u * width + v) * nrComponents;
-		if (nrComponents == 1)
-			color = { (float)data[index], 1.f, 1.f, 1.f };
-		else if (nrComponents == 3)
-			color = { (float)data[index], (float)data[index + 1], (float)data[index + 2], 1.f };
-		else if (nrComponents == 4)
-			color = { (float)data[index], (float)data[index + 1], (float)data[index + 2], (float)data[index + 3] };
-		return color;
+		return this->mipmap->lookUp(u, v, mipmapLevel);
+		//Vector4f color = { 0.f, 0.f, 0.f, 0.f };
+		//int index = (u * width + v) * nrComponents;
+		//if (nrComponents == 1)
+		//	color = { (float)data[index], 1.f, 1.f, 1.f };
+		//else if (nrComponents == 3)
+		//	color = { (float)data[index], (float)data[index + 1], (float)data[index + 2], 1.f };
+		//else if (nrComponents == 4)
+		//	color = { (float)data[index], (float)data[index + 1], (float)data[index + 2], (float)data[index + 3] };
+		//return color;
 	}
 }

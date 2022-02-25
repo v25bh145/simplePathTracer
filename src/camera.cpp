@@ -30,7 +30,15 @@ namespace pathTracer {
                     //}
                     delete ray;
                 }
-                imageFragment->pixels[x - xLow][y - yLow] = color_N / ray_N.size();
+                Vector3f real_color = color_N / ray_N.size();
+                //real_color.x() = real_color.x() - floor(real_color.x());
+                //if(real_color.x() != 0.f && real_color.y() == 0.f)
+                    //cout << vector3fToString(real_color) << endl;
+                // tone mapping
+                float gamma = 2.2f;
+                float invGamma = 1.f / gamma;
+                real_color = { pow(real_color.x(), invGamma), pow(real_color.y(), invGamma), pow(real_color.z(), invGamma) };
+                imageFragment->pixels[x - xLow][y - yLow] = real_color;
 
                 // normal
                 //Vector3f color_N = { 0, 0, 0 };
@@ -154,8 +162,10 @@ namespace pathTracer {
         Ray *ray = new Ray(point, dir, 0, tNear, tFar);
         //cout << "generate camera ray:" << ray->toString() << endl;
         // differential
-        Vector3f rxOrigin = { point.x() + pixelSize, point.y(), point.z() };
-        Vector3f ryOrigin = { point.x(), point.y() + pixelSize, point.z() };
+        Vector3f rxOrigin = point + this->XAxle * pixelSize;
+        Vector3f ryOrigin = point + this->upAngle * pixelSize;
+        //Vector3f rxOrigin = { point.x() + pixelSize, point.y(), point.z() };
+        //Vector3f ryOrigin = { point.x(), point.y(), point.z() + pixelSize };
         ray->setDifferential({ rxOrigin, ryOrigin }, { dir, dir });
         return ray;
     }
