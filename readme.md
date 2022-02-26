@@ -6,15 +6,20 @@ This is a ray tracer project based on the embree ray tracing core.
 
 The project has realized the following:
 
-BSDF: Lambertian Reflection, Specular Reflection, Specular Transmission, Fresnel Specular and Microfacet
+BSDF: Lambertian Reflection, Specular Reflection, Specular Transmission, Fresnel Specular and Microfacet[Beckmann & GGX]
 
 geometries: triangle
 
-integrator: naive pathTracer, volume pathTracer and direct light algorithm.
+integrator: pathTracer, volume pathTracer and direct light algorithm.
 
-texture, medium, pinhole camera and some sampling function.
+texture[MIPMAP], medium, pinhole camera and some sampling function[LHS].
 
 multithreading **[ONLY USES WINDOWS THREAD]**
+
+## TODO
+
+1. include assimp library and input .obj
+2. BDPT
 
 ### About Embree: https://www.embree.org/
 
