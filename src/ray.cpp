@@ -45,6 +45,11 @@ namespace pathTracer {
         buffer << tMin; 
         buffer << ", tMax="; 
         buffer << tMax;
+        buffer << ", differential(";
+        if (this->differential.hasDifferential)
+            buffer << "True, Xorigin=" << vector3fToString(this->differential.rxOrigin) << ", Yorigin=" << vector3fToString(this->differential.ryOrigin) << ")";
+        else buffer << "False)";
+        buffer << endl;
         return buffer.str();
     }
 }

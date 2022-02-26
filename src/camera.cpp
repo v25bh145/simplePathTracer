@@ -3,7 +3,7 @@
 //
 
 #include "camera.h"
-#define THREAD_N 16
+#define THREAD_N 8
 
 namespace pathTracer {
     DWORD WINAPI generateByThread(LPVOID lpParameter) {
@@ -51,6 +51,10 @@ namespace pathTracer {
                 //imageFragment->pixels[x - xLow][y - yLow] = color_N / camera->sampleOnePixel;
             }
         }
+        string info = "";
+        ostringstream buffer(info);
+        buffer << "Rendering Threads: range (" << xLow << ", " << yLow << ") to (" << xHigh << ", " << yHigh << ") completes" << endl;
+        cout << buffer.str() << endl;
         return 0;
     }
     // use integrator compute the pixels
@@ -72,8 +76,9 @@ namespace pathTracer {
         for (int i = 0; i < THREAD_N; ++i)
             // [ first(), second() )
             handle[i] = CreateThread(NULL, 0, &generateByThread, imageFragment[i], 0, NULL);
-        for (int i = 0; i < THREAD_N; ++i)
+        for (int i = 0; i < THREAD_N; ++i) {
             WaitForSingleObject(handle[i], INFINITE);
+        }
         for (int i = 0; i < THREAD_N; ++i) {
             int xLow = imageFragment[i]->widthRange.first,
                 xHigh = imageFragment[i]->widthRange.second,
@@ -148,7 +153,7 @@ namespace pathTracer {
         this->integrator->deepCopy(camera->integrator);
         this->integrator->setPixelSize(camera->pixelSize);
     }
-
+    // (x, y): in the number of grids
     Ray *Camera::sample_wi(float x, float y) {
         Vector3f point = filmA + x * width * XAxle / (float)resolution.x() - y * height * upAngle / (float)resolution.y();
 
@@ -169,23 +174,34 @@ namespace pathTracer {
         ray->setDifferential({ rxOrigin, ryOrigin }, { dir, dir });
         return ray;
     }
+    // (x_center, y_center): in the number of grids
     vector<Ray*> Camera::sample_wi_LHS(float x_center, float y_center)
     {
-        //cout << "(xCenter, yCenter)=(" << x_center << ", " << x_center << ")" << endl;
-        //cout << "pixelsize=" << pixelSize << ", sampleOnePixel=" << sampleOnePixel << endl;
         RandomGenerator randomGenerator;
         vector<Ray*> ray_N;
-        Vector2f bottomLeft = { x_center - pixelSize / 2 - pixelSize * filterRange, y_center - pixelSize / 2 - pixelSize * filterRange };
-        float filterSize = (2 * filterRange + 1) * pixelSize;
+        Vector2f bottomLeft = { x_center - 0.5f - float(filterRange), y_center - 0.5f - float(filterRange) };
+        //Vector2f bottomLeft = { x_center - pixelSize / 2 - pixelSize * filterRange, y_center - pixelSize / 2 - pixelSize * filterRange };
+        float filterSize = 2.f * float(filterRange) + 1.f;
+        //float filterSize = (2 * filterRange + 1) * pixelSize;
         float stride = filterSize / (float)sampleOnePixel;
         vector<Vector2f> u2D = randomGenerator.uniform0To1By2D(sampleOnePixel);
         vector<int> shuffleArray = randomGenerator.shuffleN(sampleOnePixel);
+
+        //cout << "(xCenter, yCenter)=(" << x_center << ", " << y_center << ")" << endl;
+        //cout << "pixelsize=" << pixelSize << ", sampleOnePixel=" << sampleOnePixel << endl;
+        //cout << "stride=" << stride << ", bottomLeft=" << vector2fToString(bottomLeft) << endl;
 
         for (int i = 0; i < sampleOnePixel; ++i) {
             float x = bottomLeft.x() + ((float)i + u2D[i].x()) * stride;
             float y = bottomLeft.y() + ((float)shuffleArray[i] + u2D[i].y()) * stride;
             //cout << "   (x, y)=(" << x << ", " << y << ")" << ", u2D[" << i << "]=" << vector2fToString(u2D[i]) << endl;
-            ray_N.push_back(sample_wi(x, y));
+            
+            Ray* ray = sample_wi(x, y);
+            // without LHS
+            //Ray* ray = sample_wi(x_center, y_center);
+
+            //cout << ray->toString() << endl;
+            ray_N.push_back(ray);
         }
         return ray_N;
     }
